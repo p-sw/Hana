@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.views.generic import View
@@ -52,7 +52,7 @@ class UserLogin(View):
         user = authenticate(username=username, password=password)
         if user is not None:  # success
             login(request, user)
-            return render(request, 'user/login.html')
+            return redirect(reverse('main:index'))
         else:  # fail
             return render(request, 'user/login.html', {'error': '잘못된 사용자 정보입니다.'})
 
