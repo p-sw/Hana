@@ -1,13 +1,65 @@
+{% load static %}
+
 <!doctype html>
 <html lang=ko>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% include 'general/macro/head.html' %}
+    {% include 'user/macro/head.html' %}
     <title>사용자 회원가입</title>
 </head>
 <body>
-
+    <main class="half-form-content">
+        <section class="form">
+            <form action="{% url 'user:register' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    {% if username.error %}
+                    <div class="alert-danger" role="alert">
+                        {{ username.error }}
+                    </div>
+                    <label for="username">아이디</label>
+                    <input type="text" class="form-control error" id="username" name="username" placeholder="아이디를 입력하세요" required>
+                    {% else %}
+                    <label for="username">아이디</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="아이디를 입력하세요" required>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="password">비밀번호</label>
+                    <input type="password" class="form-control" name="password" id="password" placeholder="비밀번호를 입력하세요" required>
+                </div>
+                <div class="form-group">
+                    <label for="password_check">비밀번호 확인</label>
+                    <input type="password" class="form-control" name="password_check" id="password_check" placeholder="비밀번호를 다시 입력하세요" required>
+                </div>
+                <div class="form-group">
+                    {% if email.error %}
+                    <div class="alert-danger" role="alert">
+                        {{ email.error }}
+                    </div>
+                    <label for="email">이메일</label>
+                    <input type="email" class="form-control error" name="email" id="email" placeholder="이메일을 입력하세요" required>
+                    {% else %}
+                    <label for="email">이메일</label>
+                    <input type="email" class="form-control" name="email" id="email" placeholder="이메일을 입력하세요" required>
+                    {% endif %}
+                </div>
+                <input type="submit" value="회원가입" disabled>
+            </form>
+        </section>
+        <section class="contentbox">
+            <header>
+                <h1>회원가입</h1>
+                <p>간단한 회원가입으로 HANA의 모든 서비스를 이용하실 수 있습니다.</p>
+            </header>
+            <div class="link">
+                <a href="{% url 'user:login' %}">이미 계정이 있으신가요?</a>
+            </div>
+        </section>
+    </main>
+    <script src="{% static 'user/js/form.js' %}"></script>
+    <script>
+        page.init();
+    </script>
 </body>
 </html>

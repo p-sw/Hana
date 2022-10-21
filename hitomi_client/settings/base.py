@@ -86,11 +86,17 @@ CONSTANCE_CONFIG = {
     "SEO_SITE_NAME": ("Hitomi Client", "Site name that will be shown in SEO"),
     "SEO_SITE_DESCRIPTION": ("Hitomi Client is a web client for Hitomi.la",
                              "Site description that will be shown in SEO"),
-    "SEO_SITE_URL": ("https://hc.sserve.work", "Site URL that will be shown in SEO"),
+    "ROOT_URL": ("https://hc.sserve.work", "Site URL that will be shown in SEO"),
+    "MAIL_SERVER": ("smtp.zoho.com", "Mail server"),
+    "MAIL_PORT": (465, "Mail port"),
+    "MAIL_USERNAME": ("", "Mail username"),
+    "MAIL_PASSWORD": ("", "Mail password"),
 }
 
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 
 CONSTANCE_CONFIG_FIELDSETS = {
-    'SEO': ('SEO_SITE_NAME', 'SEO_SITE_DESCRIPTION', 'SEO_SITE_URL'),
+    'SEO': ('SEO_SITE_NAME', 'SEO_SITE_DESCRIPTION', 'ROOT_URL'),
+    'MAIL PROVIDER': ('MAIL_SERVER', 'MAIL_PORT'),
+    'MAIL USER': ('MAIL_USERNAME', 'MAIL_PASSWORD')
 }
