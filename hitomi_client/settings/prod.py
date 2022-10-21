@@ -1,5 +1,5 @@
 from secrets import token_hex
-from . import base
+from .base import *
 
 SECRET_KEY = token_hex(50)
 

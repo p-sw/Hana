@@ -10,7 +10,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'constance',
-    'constance.backends.database'
+    'constance.backends.database',
     'user',
 ]
 
