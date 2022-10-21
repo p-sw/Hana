@@ -38,7 +38,7 @@ class UserRegister(View):
             })
         user = User.objects.create_user(username=username, password=password, email=email)
         user.save()
-        return render(request, 'user/register.html')
+        return render(request, 'user/register_success.html')
 
 
 class UserLogin(View):
