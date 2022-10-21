@@ -9,7 +9,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user'
+    'constance',
+    'constance.backends.database'
+    'user',
 ]
 
 MIDDLEWARE = [
@@ -33,6 +35,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'constance.context_processors.config',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -78,3 +81,16 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CONSTANCE_CONFIG = {
+    "SEO_SITE_NAME": ("Hitomi Client", "Site name that will be shown in SEO"),
+    "SEO_SITE_DESCRIPTION": ("Hitomi Client is a web client for Hitomi.la",
+                             "Site description that will be shown in SEO"),
+    "SEO_SITE_URL": ("https://hc.sserve.work", "Site URL that will be shown in SEO"),
+}
+
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+
+CONSTANCE_CONFIG_FIELDSETS = {
+    'SEO': ('SEO_SITE_NAME', 'SEO_SITE_DESCRIPTION', 'SEO_SITE_URL'),
+}
