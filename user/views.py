@@ -20,6 +20,7 @@ class UserRegister(View):
         username = request.POST.get('username')
         password = request.POST.get('password')
         email = request.POST.get('email')
+        nickname = request.POST.get('nickname')
         if User.objects.filter(username=username).exists():
             return render(request, 'user/register.html', {
                 'form': {
@@ -36,7 +37,7 @@ class UserRegister(View):
                     }
                 }
             })
-        user = User.objects.create_user(username=username, password=password, email=email)
+        user = User.objects.create_user(username=username, password=password, email=email, first_name=nickname)
         user.save()
         return render(request, 'user/register_success.html')
 
