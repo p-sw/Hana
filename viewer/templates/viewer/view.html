@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    {% include 'general/macro/head.html' %}
+    {% include 'viewer/macro/head.html' %}
+    <title>Viewer</title>
+</head>
+<body>
+    <section id="image">
+    </section>
+    <script src="{% static 'viewer/js/viewer.js' %}"></script>
+    <script>
+        const viewer = new Viewer();
+        viewer.init({{ gallery_id }});
+    </script>
+</body>
+</html>
