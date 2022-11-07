@@ -1,10 +1,11 @@
 app_name = "viewer"
 
 from django.urls import path
+from django.contrib.auth.decorators import login_required
 
 from . import views
 
 urlpatterns = [
-    path('<int:gallery_id>', views.IndexView.as_view(), name='index'),
+    path('<int:gallery_id>', login_required(views.IndexView.as_view()), name='index'),
     path('image', views.image_proxy, name='image_proxy'),
 ]

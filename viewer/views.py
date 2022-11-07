@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpResponseForbidden, HttpResponse
+from django.contrib.auth.decorators import login_required
 
 import requests
 
@@ -12,7 +13,7 @@ class IndexView(View):
                           'gallery_id': gallery_id,
                       })
 
-
+@login_required
 def image_proxy(request):
     image_url = request.GET.get('url')
     referer = request.GET.get('gallery')
