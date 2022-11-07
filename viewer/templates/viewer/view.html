@@ -7,8 +7,11 @@
     <title>Viewer</title>
 </head>
 <body>
-    <section id="image">
-    </section>
+    {% include 'viewer/macro/nav.html' %}
+    <main>
+        <section id="image">
+        </section>
+    </main>
     <script src="{% static 'viewer/js/viewer.js' %}"></script>
     <script>
         const viewer = new Viewer();
