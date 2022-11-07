@@ -7,7 +7,7 @@ class Viewer {
         this.drawer = document.querySelector('section#image');
 
         this.getGG().then(() => {
-            this.getGalleryScript().then(files => {
+            this.getGalleryScript().then(async files => {
                 this.loadImages(files);
             });
         })
@@ -78,12 +78,12 @@ class Viewer {
 
     loadImages(files) {
         for (let file of files) {
-            let url = this.getGalleryImageURL(file, "webp");
+            let url = `/view/image?url=${this.getGalleryImageURL(file, "webp")}&gallery=${this.galleryid}`;
             let img = document.createElement('img');
             img.src = url;
             if (file.hasavif) {
                 let picture = document.createElement('picture')
-                let source_url = this.getGalleryImageURL(file, "avif");
+                let source_url = `/view/image?url=${this.getGalleryImageURL(file, "avif")}`;
                 let source = document.createElement("source");
                 source.setAttribute("srcset", source_url);
                 source.setAttribute("type", "image/avif");
