@@ -5,7 +5,7 @@ class Nav {
 
         this.getScript().then((data) => {
             this.nav.querySelector("h1").innerText = /"title":"([^"]+)"/.exec(data)[1];
-        })
+        });
     }
 
     getScript () {

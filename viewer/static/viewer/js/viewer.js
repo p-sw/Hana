@@ -8,7 +8,7 @@ class Viewer {
 
         this.getGG().then(() => {
             this.getGalleryScript().then(files => {
-                // this.loadImages(files);
+                this.loadImages(files);
             });
         })
     }
