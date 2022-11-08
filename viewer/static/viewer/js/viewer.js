@@ -7,15 +7,10 @@ class Viewer {
         this.drawer = document.querySelector('section#image');
 
         this.getGG().then(() => {
-            this.getGalleryScript().then(data => {
-                this.setTitle(data.title);
-                this.loadImages(data.files);
+            this.getGalleryScript().then(files => {
+                // this.loadImages(files);
             });
         })
-    }
-
-    setTitle(title) {
-        document.querySelector("nav h1").innerText = title;
     }
 
     getGG() {
@@ -32,6 +27,7 @@ class Viewer {
     getGalleryScript() {
         return fetch(`https://ltn.hitomi.la/galleries/${this.galleryid}.js`, {
             method: 'GET',
+            cache: 'force-cache',
         }).then(response => response.text()).then(data => {
             let file_regex = [/"files":\[[^\]]*\]/, /{[^}]*}/g];
             let files_raw = file_regex[0].exec(data)[0].matchAll(file_regex[1]);
@@ -58,14 +54,7 @@ class Viewer {
                 files.push(file);
             }
 
-            return {
-                origin: data,
-                files: files,
-            };
-        }).then(data => {
-            let title_regex = /"title":"([^"]+)"/;
-            data.title = title_regex.exec(data.origin)[1];
-            return data;
+            return files;
         })
     }
 

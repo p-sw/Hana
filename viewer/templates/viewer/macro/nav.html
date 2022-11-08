@@ -2,5 +2,8 @@
 <nav>
     <img src="{% static 'viewer/image/back.svg' %}" alt="Go Back">
     <h1></h1>
-    <img src="{% static 'viewer/image/setting.svg' %}" alt="Settings">
 </nav>
+<script src="{% static 'viewer/js/nav.js' %}"></script>
+<script>
+    nav = new Nav({{ gallery_id }});
+</script>
