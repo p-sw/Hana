@@ -1,14 +1,29 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'main/css/nav.css' %}">
 <section class="toolbar">
-    <button class="nav-opener">
-
-    </button>
     <nav class="navigation">
-
+        <div class="control">
+            <button class="nav-opener" data-label="Menu">
+                <img src="{% static 'main/image/menu.svg' %}" alt="menu">
+            </button>
+            <button class="nav-closer disabled" data-label="Close">
+                <img src="{% static 'main/image/close.svg' %}" alt="close">
+            </button>
+        </div>
+        <div class="content">
+            <button class="settings" data-label="Settings" data-order="0">
+                <img src="{% static 'main/image/setting.svg' %}" alt="settings">
+            </button>
+        </div>
     </nav>
     <div class="searchbar">
-        <input type="text" id="searchbar" placeholder="태그로 검색">
+        <textarea class="searchbar-input" placeholder="태그로 검색"></textarea>
         <button class="search">
-
+            <img src="{% static 'main/image/search.svg' %}" alt="search">
         </button>
     </div>
 </section>
+<script src="{% static 'main/js/nav.js' %}"></script>
+<script>
+    let nav = new Nav();
+</script>
