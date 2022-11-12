@@ -20,12 +20,12 @@ class Viewer {
             script.onload = resolve;
             script.onerror = reject;
             script.async = true;
-            script.src = 'https://ltn.hitomi.la/gg.js';
+            script.src = '/api/get-js?url=https://ltn.hitomi.la/gg.js';
         });
     }
 
     getGalleryScript() {
-        return fetch(`https://ltn.hitomi.la/galleries/${this.galleryid}.js`, {
+        return fetch(`/api/get-js?url=https://ltn.hitomi.la/galleries/${this.galleryid}.js`, {
             method: 'GET',
             cache: 'force-cache',
         }).then(response => response.text()).then(data => {
@@ -76,12 +76,12 @@ class Viewer {
 
     loadImages(files) {
         for (let file of files) {
-            let url = `/view/image?url=${this.getGalleryImageURL(file, "webp")}&gallery=${this.galleryid}`;
+            let url = `/api/get-image?url=${this.getGalleryImageURL(file, "webp")}&gallery=${this.galleryid}`;
             let img = document.createElement('img');
             img.src = url;
             if (file.hasavif) {
                 let picture = document.createElement('picture')
-                let source_url = `/view/image?url=${this.getGalleryImageURL(file, "avif")}`;
+                let source_url = `/api/get-image?url=${this.getGalleryImageURL(file, "avif")}`;
                 let source = document.createElement("source");
                 source.setAttribute("srcset", source_url);
                 source.setAttribute("type", "image/avif");

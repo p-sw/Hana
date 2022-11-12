@@ -7,5 +7,4 @@ from . import views
 
 urlpatterns = [
     path('<int:gallery_id>', login_required(views.IndexView.as_view()), name='index'),
-    path('image', views.image_proxy, name='image_proxy'),
 ]
