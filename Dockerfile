@@ -1,19 +1,22 @@
-FROM python:3.10.7
+FROM python:3.10.7-slim
+
 ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 ENV DJANGO_SETTINGS_MODULE=hitomi_client.settings.prod
 
 WORKDIR /app
 
-COPY requirements.txt /app/
-
-RUN pip install -r requirements.txt
+COPY Pipfile Pipfile.lock /app/
+RUN python -m pip install --upgrade pip
+RUN pip install pipenv && pipenv install --system --deploy
 
 COPY . /app/
 
-COPY ./docker-entrypoint.sh /app/
-
 RUN chmod +x /app/docker-entrypoint.sh
 
-EXPOSE 5002
+RUN adduser -u 5678 --disable-password --gecos "" appuser && chown -R appuser /app
+USER appuser
 
-ENTRYPOINT ["/app/docker-entrypoint.sh"]
+EXPOSE 5003
+
+CMD ["/app/docker-entrypoint.sh"]
