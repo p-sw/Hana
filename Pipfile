@@ -9,6 +9,9 @@ django-constance = {version = "==2.9.1", extras = ["database"]}
 requests = "==2.28.1"
 beautifulsoup4 = "==4.11.1"
 urllib3 = "==1.26.12"
+libsass = "*"
+django-compressor = "*"
+django-sass-processor = "*"
 
 [dev-packages]
 
