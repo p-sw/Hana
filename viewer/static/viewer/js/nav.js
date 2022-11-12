@@ -9,7 +9,7 @@ class Nav {
     }
 
     getScript () {
-        return fetch(`https://ltn.hitomi.la/galleries/${this.galleryid}.js`, {
+        return fetch(`/api/get-js?url=https://ltn.hitomi.la/galleries/${this.galleryid}.js`, {
             method: 'GET',
             cache: 'force-cache',
         }).then(response => response.text())
