@@ -8,14 +8,14 @@ import requests
 @login_required
 def image_proxy(request):
     image_url = request.GET.get('url')
-    referer = request.GET.get('gallery')
+    referer = request.GET.get('gallery', '')
     header = {
         "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
         "accept-encoding": "gzip, deflate, br",
         "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
         "cache-control": "no-cache",
         "pragma": "no-cache",
-        "referer": f"https://hitomi.la/reader/{referer}.html",
+        "referer": f"https://hitomi.la/reader/{referer}.html" if referer else "https://hitomi.la/",
         "sec-ch-ua": '"Chromium";v="106", "Not;A=Brand";v="99"',
         "sec-ch-ua-mobile": "?0",
         "sec-fetch-dest": "image",
@@ -39,7 +39,12 @@ def nozomi_proxy(request):
     })
 
     if res.status_code in [200, 206]:
-        return HttpResponse(res.content, content_type="arraybuffer", status=res.status_code)
+        headers = {
+            "Content-Type": "arraybuffer",
+            "Content-Range": res.headers['Content-Range'],
+            "Content-Length": res.headers['Content-Length'],
+        }
+        return HttpResponse(res.content, headers=headers, status=res.status_code)
     else:
         return HttpResponse(status=res.status_code)
 
@@ -51,5 +56,16 @@ def js_proxy(request):
 
     if res.status_code == 200:
         return HttpResponse(res.content, content_type="text/javascript")
+    else:
+        return HttpResponse(status=res.status_code)
+
+
+def galleryblock_proxy(request):
+    res = requests.get(f"https://ltn.hitomi.la/galleryblock/{request.GET.get('id')}.html", headers={
+        "Content-Type": "text/html",
+    })
+
+    if res.status_code == 200:
+        return HttpResponse(res.content, content_type="text/html")
     else:
         return HttpResponse(status=res.status_code)

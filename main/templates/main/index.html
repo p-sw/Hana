@@ -1,10 +1,16 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
     <head>
         {% include 'general/macro/head.html' %}
         <title>App</title>
+        <link rel="stylesheet" href="{% static 'main/css/galleryblock.css' %}">
     </head>
     <body>
         {% include 'main/macro/toolbar.html' %}
+        <main>
+            <section id="gallery"></section>
+        </main>
+        <script src="{% static 'main/js/gallery-main.js' %}"></script>
     </body>
 </html>
