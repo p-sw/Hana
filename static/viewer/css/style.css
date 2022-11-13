@@ -1,0 +1,18 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css");
+body { overflow-x: hidden; overflow-y: scroll; }
+
+nav { display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 5px 10px; background-color: transparent; position: -webkit-sticky; position: sticky; top: 0; }
+
+nav * { background-color: #eaeaea; border-radius: 8px; padding: 5px 8px; }
+
+nav img { width: 50px; height: 50px; float: left; }
+
+nav h1 { font-family: "Pretendard", sans-serif; font-size: 30px; font-weight: 700; }
+
+main { width: 100%; background-color: #3f3f3f; }
+
+main section { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
+
+main section#image picture img { width: 100%; }
+
+/*# sourceMappingURL=style.css.map */
