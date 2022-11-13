@@ -103,4 +103,4 @@ CONSTANCE_CONFIG_FIELDSETS = {
     'MAIL USER': ('MAIL_USERNAME', 'MAIL_PASSWORD')
 }
 
-LOGIN_URL = 'user:login'
+LOGIN_URL = 'front:index'  # 'user:login'
