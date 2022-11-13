@@ -14,6 +14,7 @@ INSTALLED_APPS = [
     'user',
     'main',
     'viewer',
+    'front',
 ]
 
 MIDDLEWARE = [
