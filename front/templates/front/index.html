@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hana</title>
+
+    <link href="{% static 'front/css/style.css' %}"> rel="stylesheet" type="text/css">
+</head>
+<body>
+    <main>
+        <section class="headers">
+            <h2>언제 어디서나, 가장 완벽한 히토미</h2>
+            <h1>HANA</h1>
+            <h3>Coming Soon</h3>
+        </section>
+        <section class="control">
+            <a href="{% url 'user:register' %}">사전 회원 등록</a>
+        </section>
+    </main>
+</body>
+</html>
