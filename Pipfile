@@ -12,6 +12,7 @@ urllib3 = "==1.26.12"
 libsass = "*"
 django-compressor = "*"
 django-sass-processor = "*"
+hypercorn = "*"
 
 [dev-packages]
 
