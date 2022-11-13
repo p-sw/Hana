@@ -86,10 +86,10 @@ STATIC_ROOT = BASE_DIR / 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CONSTANCE_CONFIG = {
-    "SEO_SITE_NAME": ("Hitomi Client", "Site name that will be shown in SEO"),
-    "SEO_SITE_DESCRIPTION": ("Hitomi Client is a web client for Hitomi.la",
+    "SEO_SITE_NAME": ("HANA", "Site name that will be shown in SEO"),
+    "SEO_SITE_DESCRIPTION": ("HANA is a modern-designed web client for Hitomi.la, also has very rich features.",
                              "Site description that will be shown in SEO"),
-    "ROOT_URL": ("https://hc.sserve.work", "Site URL that will be shown in SEO"),
+    "ROOT_URL": ("https://hana.sserve.work", "Site URL that will be shown in SEO"),
     "MAIL_SERVER": ("smtp.zoho.com", "Mail server"),
     "MAIL_PORT": (465, "Mail port"),
     "MAIL_USERNAME": ("", "Mail username"),
