@@ -1,3 +1,4 @@
+{% load static %}
 <meta name="title" content="{{ config.SEO_SITE_NAME }}">
 <meta name="description" content="{{ config.SEO_SITE_DESCRIPTION }}">
 
@@ -5,10 +6,10 @@
 <meta property="og:url" content="{{ config.ROOT_URL }}">
 <meta property="og:title" content="{{ config.SEO_SITE_NAME }}">
 <meta property="og:description" content="{{ config.SEO_SITE_DESCRIPTION }}">
-<meta property="og:image" content="">
+<meta property="og:image" content="{% static 'front/seo_banner.png' %}">
 
 <meta property="twitter:card" content="summary_large_image">
 <meta property="twitter:url" content="{{ config.ROOT_URL }}">
 <meta property="twitter:title" content="{{ config.SEO_SITE_NAME }}">
 <meta property="twitter:description" content="{{ config.SEO_SITE_DESCRIPTION }}">
-<meta property="twitter:image" content="">
+<meta property="twitter:image" content="{% static 'front/seo_banner.png' %}">
