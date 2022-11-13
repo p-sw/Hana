@@ -5,6 +5,15 @@ html,body {
   padding: 0;
 }
 
+@keyframes smoothShowup {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 body {
   font-family: "Pretendard", sans-serif;
   font-weight: 700;
@@ -42,16 +51,16 @@ body {
         padding: 0;
       }
 
-      h1 {
-        font-size: 30px;
-      }
+      @for $i from 1 through 3 {
+        h#{$i} {
+          opacity: 0;
+          font-size: 40px - 8px * $i;
+          animation: smoothShowup 1s ease-in-out forwards;
+        }
 
-      h2 {
-        font-size: 20px;
-      }
-
-      h3 {
-        font-size: 15px;
+        *:nth-child(#{$i}) {
+          animation-delay: $i * 0.5s;
+        }
       }
     }
 

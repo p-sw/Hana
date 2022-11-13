@@ -4,6 +4,14 @@ html, body {
   padding: 0;
 }
 
+@keyframes smoothShowup {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 body {
   font-family: "Pretendard", sans-serif;
   font-weight: 700;
@@ -35,13 +43,28 @@ body main section.headers * {
   padding: 0;
 }
 body main section.headers h1 {
-  font-size: 30px;
+  opacity: 0;
+  font-size: 32px;
+  animation: smoothShowup 1s ease-in-out forwards;
+}
+body main section.headers *:nth-child(1) {
+  animation-delay: 0.5s;
 }
 body main section.headers h2 {
-  font-size: 20px;
+  opacity: 0;
+  font-size: 24px;
+  animation: smoothShowup 1s ease-in-out forwards;
+}
+body main section.headers *:nth-child(2) {
+  animation-delay: 1s;
 }
 body main section.headers h3 {
-  font-size: 15px;
+  opacity: 0;
+  font-size: 16px;
+  animation: smoothShowup 1s ease-in-out forwards;
+}
+body main section.headers *:nth-child(3) {
+  animation-delay: 1.5s;
 }
 body main section.control a, body main section.control button {
   width: fit-content;
