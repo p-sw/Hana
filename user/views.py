@@ -21,6 +21,15 @@ class UserRegister(View):
         password = request.POST.get('password')
         email = request.POST.get('email')
         nickname = request.POST.get('nickname')
+        invtoken = request.POST.get('invtoken')
+        if not models.InviteToken.objects.filter(token=invtoken).exists():
+            return render(request, 'user/register.html', {
+                'form': {
+                    'invtoken': {
+                        'error': "잘못된 초대 코드입니다."
+                    }
+                }
+            })
         if User.objects.filter(username=username).exists():
             return render(request, 'user/register.html', {
                 'form': {
@@ -39,6 +48,7 @@ class UserRegister(View):
             })
         user = User.objects.create_user(username=username, password=password, email=email, first_name=nickname)
         user.save()
+        models.InviteToken.objects.filter(token=invtoken).delete()
         return render(request, 'user/register_success.html')
 
 

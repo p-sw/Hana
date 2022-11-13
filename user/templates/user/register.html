@@ -48,6 +48,18 @@
                     <input type="email" class="form-control" name="email" id="email" placeholder="이메일을 입력하세요" required>
                     {% endif %}
                 </div>
+                <div class="form-group">
+                    {% if form.ivntoken.error %}
+                    <div class="alert-danger" role="alert">
+                        {{ form.ivntoken.error }}
+                    </div>
+                    <label for="ivntoken">초대 코드</label>
+                    <input type="text" class="form-control error" name="ivntoken" id="ivntoken" placeholder="초대코드를 입력하세요" required>
+                    {% else %}
+                    <label for="ivntoken">초대 코드</label>
+                    <input type="text" class="form-control" name="ivntoken" id="ivntoken" placeholder="초대코드를 입력하세요" required>
+                    {% endif %}
+                </div>
                 <input type="submit" value="회원가입" disabled>
             </form>
         </section>
