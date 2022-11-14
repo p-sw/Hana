@@ -83,7 +83,11 @@ class Viewer {
             img.onerror = (e) => {
                 // delayed retry
                 setTimeout(() => {
-                    e.target.src = e.target.src;
+                    if (/&t=/.test(e.target.src)) {
+                        e.target.src = e.target.src.replace(/&t=\d+/, `&t=${Date.now()}`);
+                    } else {
+                        e.target.src = e.target.src + "&t=" + Date.now();
+                    }
                 }, 1500);
             }
             img.onload = (e) => {
@@ -95,14 +99,6 @@ class Viewer {
                 let source = document.createElement("source");
                 source.setAttribute("srcset", source_url);
                 source.setAttribute("type", "image/avif");
-                source.onerror = (e) => {
-                    // retry
-                    if (window.confirm("이미지를 불러오지 못했습니다.\n다시 시도할까요?")) {
-                        e.target.src = e.target.src;
-                    } else {
-                        e.target.remove();
-                    }
-                }
                 picture.appendChild(source);
                 picture.appendChild(img);
                 this.drawer.appendChild(picture);
