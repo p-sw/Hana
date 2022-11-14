@@ -14,9 +14,9 @@ COPY . /app/
 
 RUN chmod +x /app/docker-entrypoint.sh
 
-RUN adduser -u 5678 --disable-password --gecos "" appuser && chown -R appuser /app
+RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
 USER appuser
 
-EXPOSE 5003
+EXPOSE 5000
 
 CMD ["/app/docker-entrypoint.sh"]
