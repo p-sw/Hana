@@ -10,6 +10,7 @@ class TagManager(models.Manager):
 
 
 class Tag(models.Model):
+    id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=255)
     tagtype = models.CharField(max_length=10, choices=(
         ('female', 'Female Tag'),
