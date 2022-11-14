@@ -1,7 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse, HttpResponseForbidden, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 import requests
+import json
 
 from main.models import Tag
 
@@ -73,16 +75,25 @@ def galleryblock_proxy(request):
         return HttpResponse(status=res.status_code)
 
 
+@csrf_exempt
 def get_recommendation_tag(request):
-    current_name = request.GET.get('tag')
+    POST: dict = json.loads(request.body)
+    current_name = POST.get("tag")
+    ban_ids = POST.get("ban")
 
-    tag_suggests_1 = Tag.objects.filter(name__startswith=current_name).values_list('tagtype', 'name')[:5]
+    def get_tags(name_query: str, excludes: list = None):
+        if excludes:
+            return Tag.objects.exclude(id__in=excludes).filter(name__startswith=name_query).values_list('id', 'tagtype', 'name')[:5]
+        else:
+            return Tag.objects.filter(name__startswith=name_query).values_list('id', 'tagtype', 'name')[:5]
+
+    tag_suggests_1 = get_tags(current_name, ban_ids)
     res = tag_suggests_1
     if len(tag_suggests_1) != 5:
-        tag_suggests_2 = Tag.objects.filter(name__contains=current_name).values_list('tagtype', 'name')[:5]
+        tag_suggests_2 = get_tags(current_name, ban_ids)
         res = tag_suggests_2
         if len(tag_suggests_2) != 5:
             total_tag_suggests = (list(tag_suggests_1) + list(tag_suggests_2))[:5]
             res = total_tag_suggests
 
-    return JsonResponse({"tags": [f"{tag_type}:{tag_name}" for tag_type, tag_name in res]})
+    return JsonResponse({tag_id: f"{tag_type}:{tag_name}" for tag_id, tag_type, tag_name in res})

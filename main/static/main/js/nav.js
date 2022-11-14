@@ -48,17 +48,29 @@ class QueryArea {
     input() {
         this.suggestor.innerHTML = '';
         let query = /(?:[^:]+:)?([a-zA-Z_\s]*)/.exec(this.queryArea.value)[1];
+        let appendedTags = this.tag_container.children;
+        let body = {}
         if (query.length > 0) {
-            fetch(`/api/get-recommendation-tag?tag=${query}`, {
-                method: 'GET',
+            body['tag'] = query;
+            if (appendedTags.length > 0) {
+                body['ban'] = [];
+                for (let i = 0; i < appendedTags.length; i++) {
+                    body['ban'].push(appendedTags[i].dataset.id);
+                }
+            }
+            fetch(`/api/get-recommendation-tag`, {
+                method: 'POST',
+                body: JSON.stringify(body)
             }).then((response) => response.json()).then((data) => {
-                for (let tag of data.tags) {
+                for (let tag_id in data) {
                     let item = document.createElement("div");
                     item.classList.add("item");
-                    item.innerHTML = `<span>${tag}</span>`;
+                    item.innerHTML = `<span>${data[tag_id]}</span>`;
+                    item.dataset.id = tag_id;
                     item.onclick = (e) => {
                         let ti = document.createElement("div");
                         ti.classList.add("item");
+                        ti.dataset.id = tag_id;
                         ti.innerText = e.target.innerText;
 
                         let close = document.createElement("button");
