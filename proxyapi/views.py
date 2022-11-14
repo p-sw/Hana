@@ -31,9 +31,10 @@ def image_proxy(request):
             "Chrome/106.0.0.0 Safari/537.36"
     }
     res = requests.get(image_url, headers=header)
-    if res.status_code == 403:
-        return HttpResponseForbidden()
-    return HttpResponse(res.content, content_type=res.headers['Content-Type'])
+    if res.status_code == 200:
+        return HttpResponse(res.content, content_type=res.headers['Content-Type'])
+    else:
+        return HttpResponse(res.content, headers=res.headers, status=res.status_code)
 
 
 def nozomi_proxy(request):
