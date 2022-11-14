@@ -1,177 +1,128 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css");
-
 section.toolbar {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-
-    padding: 0 8px;
-
-    width: 100%;
-    height: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 8px;
+  width: 100%;
+  height: 50px;
 }
-
 section.toolbar nav {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-
-    padding: 10px 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 5px;
 }
-
 section.toolbar nav button {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-
-    width: 100%;
-    height: 100%;
-    padding: 5px;
-
-    border: none;
-    border-radius: 5px;
-    background-color: #fff;
-    box-shadow: 0 0 5px #00000050;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3137254902);
 }
-
 section.toolbar nav button:hover {
-    background-color: #00000010;
+  background-color: rgba(0, 0, 0, 0.062745098);
 }
-
-section.toolbar nav button::after {
-    opacity: 0;
-
-    position: absolute;
-    left: 60px;
-
-    content: attr(data-label);
-    font-size: 12px;
-    font-weight: 600;
-    font-family: "Pretendard", sans-serif;
-    color: #000;
-
-    white-space: nowrap;
-
-    transition: 0.2s;
-}
-
 section.toolbar nav button:hover::after {
-    opacity: 1;
-
-    transition: 0.2s;
+  opacity: 1;
+  transition: 0.2s;
 }
-
-section.toolbar nav button img {
-    width: 30px;
-    height: 30px;
+section.toolbar nav button::after {
+  position: absolute;
+  left: 60px;
+  content: attr(data-label);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: "Pretendard", sans-serif;
+  color: #000;
+  white-space: nowrap;
+  transition: 0.2s;
 }
-
-section.toolbar nav div.control button.disabled {
-    display: none;
-}
-
-section.toolbar nav div.content button {
-    --order: attr(data-order number);
-
-    --transition-delay: calc(var(--order) * 0.1s);
-    --transition-speed: 0.3s;
-}
-
-section.toolbar nav div.content button:not(.visible) {
-    transform: translateX(-300%);
-
-    transition: var(--transition-speed) ease-in-out;
-    transition-delay: var(--transition-delay);
-}
-
-section.toolbar nav div.content button.visible {
-    order: var(--order);
-
-    transition: var(--transition-speed) ease-in-out;
-    transition-delay: var(--transition-delay);
-}
-
 @media (max-width: 600px) {
-    section.toolbar nav button::after {
-        position: relative;
-        top: 0;
-        left: 0;
-
-        opacity: 1;
-    }
+  section.toolbar nav button::after {
+    position: relative;
+    top: 0;
+    left: 0;
+    opacity: 1;
+  }
 }
-
+section.toolbar nav button img {
+  width: 30px;
+  height: 30px;
+}
+section.toolbar nav div.control button.disabled {
+  display: none;
+}
+section.toolbar nav div.content button:not(.visible) {
+  transform: translateX(-300%);
+  transition: 0.3s ease-in-out;
+  transition-delay: calc(attr(data-order number) * 0.1s);
+}
+section.toolbar nav div.content button.visible {
+  order: attr(data-order number);
+  transition: 0.3s ease-in-out;
+  transition-delay: calc(attr(data-order number) * 0.1s);
+}
 section.toolbar div.searchbar {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-
-    width: 400px;
-    height: 100%;
-
-    padding: 10px;
-    margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 400px;
+  height: 100%;
+  padding: 10px;
+  margin-top: 10px;
 }
-
 section.toolbar div.searchbar textarea.searchbar-input {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-
-    width: 100%;
-    height: 50px;
-    padding: 5px;
-
-    border: none;
-    border-radius: 5px;
-    background-color: #fff;
-    box-shadow: 0 0 5px #00000050;
-
-    resize: none;
-    line-height: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  height: 50px;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3137254902);
+  resize: none;
+  line-height: 25px;
 }
-
 section.toolbar div.searchbar textarea.searchbar-input::placeholder {
-    font-family: "Pretendard", sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    color: #00000050;
-    vertical-align: middle;
+  font-family: "Pretendard", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.3137254902);
+  vertical-align: center;
+  text-align: center;
 }
-
-section.toolbar div.searchbar textarea.searchbar-input::--webkit-input-placeholder {
-    font-family: "Pretendard", sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    color: #00000050;
-    vertical-align: middle;
-}
-
 section.toolbar div.searchbar button.search {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-
-    height: 50px;
-    padding: 5px 7px;
-
-    border: none;
-    border-radius: 5px;
-    background-color: #fff;
-    box-shadow: 0 0 5px #00000050;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  height: 50px;
+  padding: 5px 7px;
+  border: none;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3137254902);
 }
-
 section.toolbar div.searchbar button.search img {
-    height: 100%;
+  height: 100%;
 }
+
+/*# sourceMappingURL=nav.css.map */

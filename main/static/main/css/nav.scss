@@ -1,0 +1,168 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css");
+
+section.toolbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  padding: 0 8px;
+
+  width: 100%;
+  height: 50px;
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px 5px;
+
+    button {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+
+      width: 100%;
+      height: 100%;
+      padding: 5px;
+
+      border: none;
+      border-radius: 5px;
+      background-color: #fff;
+      box-shadow: 0 0 5px #00000050;
+
+      &:hover {
+        background-color: #00000010;
+
+        &::after {
+          opacity: 1;
+
+          transition: 0.2s;
+        }
+      }
+
+      &::after {
+        position: absolute;
+        left: 60px;
+
+        content: attr(data-label);
+        font-size: 12px;
+        font-weight: 600;
+        font-family: "Pretendard", sans-serif;
+        color: #000;
+
+        white-space: nowrap;
+
+        transition: 0.2s;
+
+        @media (max-width: 600px) {
+          position: relative;
+          top: 0;
+          left: 0;
+
+          opacity: 1;
+        }
+      }
+
+      img {
+        width: 30px;
+        height: 30px;
+      }
+    }
+
+    div.control {
+      button.disabled {
+        display: none;
+      }
+    }
+
+    div.content button {
+      $order: attr(data-order number);
+
+      $transition-delay: calc($order * 0.1s);
+      $transition-speed: 0.3s;
+
+      &:not(.visible) {
+        transform: translateX(-300%);
+
+        transition: $transition-speed ease-in-out;
+        transition-delay: $transition-delay;
+      }
+
+      &.visible {
+        order: $order;
+
+        transition: $transition-speed ease-in-out;
+        transition-delay: $transition-delay;
+      }
+    }
+  }
+
+  div.searchbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    width: 400px;
+    height: 100%;
+
+    padding: 10px;
+    margin-top: 10px;
+
+    textarea.searchbar-input {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+
+      width: 100%;
+      height: 50px;
+      padding: 5px;
+
+      border: none;
+      border-radius: 5px;
+      background-color: #fff;
+      box-shadow: 0 0 5px #00000050;
+
+      resize: none;
+      line-height: 25px;
+
+      &::placeholder {
+        font-family: "Pretendard", sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        color: #00000050;
+        vertical-align: center;
+        text-align: center;
+      }
+    }
+
+    button.search {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+
+      height: 50px;
+      padding: 5px 7px;
+
+      border: none;
+      border-radius: 5px;
+      background-color: #fff;
+      box-shadow: 0 0 5px #00000050;
+
+      img {
+        height: 100%;
+      }
+    }
+  }
+}

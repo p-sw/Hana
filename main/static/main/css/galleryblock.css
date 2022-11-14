@@ -1,154 +1,113 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css");
-
 a:-webkit-any-link {
-    color: #000000;
-    text-decoration: none;
+  color: #000000;
+  text-decoration: none;
 }
 
 section article.gallery-block {
-    display: block;
-
-    width: 90%;
-
-    margin: 20px auto;
-    padding: 30px;
-
-    border: 1px solid #00000050;
-    border-radius: 30px;
+  display: block;
+  width: 90%;
+  margin: 20px auto;
+  padding: 30px;
+  border: 1px solid rgba(0, 0, 0, 0.3137254902);
+  border-radius: 30px;
 }
-
 section article.gallery-block div {
-    display: flex;
-    flex-direction: row;
-
-    width: 100%;
-    height: 100%;
-
-    overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
-
 section article.gallery-block div div.col {
-    display: flex;
-    flex-direction: column;
-
-    width: 100%;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
 }
-
-section article.gallery-block div a.lillie {  /* takes about 30% of the width, 100% height */
-    display: table-cell;
-
-    width: 30%;
-    height: 100%;
-
-    background-color: #000;
+section article.gallery-block div a.lillie {
+  display: table-cell;
+  width: 30%;
+  height: 100%;
+  background-color: #000;
 }
-
+section article.gallery-block div a.lillie div, section article.gallery-block div a.lillie picture {
+  margin-left: 0;
+}
 section article.gallery-block div > :not(a.lillie) {
-    margin-left: 20px;
+  margin-left: 20px;
 }
-
-section article.gallery-block div a.lillie div {
-    margin-left: 0;
-}
-
-section article.gallery-block div a.lillie picture {
-    margin-left: 0;
-}
-
 section article.gallery-block div h1.lillie {
-    font-family: "Pretendard", sans-serif;
-    font-size: 30px;
-    font-weight: 700;
+  font-family: "Pretendard", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
 }
-
 section article.gallery-block div h1.lillie a {
-    color: #000;
-    text-decoration: none;
+  color: #000;
+  text-decoration: none;
 }
-
 section article.gallery-block div div.artist-list {
-    width: calc(100% - 20px);
-
-    margin-bottom: 20px;
+  width: calc(100% - 20px);
+  margin-bottom: 20px;
 }
-
 section article.gallery-block div div.artist-list ul {
-    margin-left: 0;
-    padding-left: 0;
-
-    list-style: none;
-
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-
-    font-family: "Pretendard", sans-serif;
-    font-size: 20px;
-    font-weight: 500;
+  margin-left: 0;
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  font-family: "Pretendard", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
 }
-
 section article.gallery-block div div.artist-list ul::before {
-    content: "By ";
-
-    font-family: "Pretendard", sans-serif;
-    font-size: 20px;
-    font-weight: 500;
-
-    color: #000;
-
-    margin-right: 10px;
+  content: "By ";
+  font-family: "Pretendard", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: #000;
+  margin-right: 10px;
 }
-
 section article.gallery-block div div.artist-list ul li a {
-    color: #000;
-    text-decoration: none;
+  color: #000;
+  text-decoration: none;
 }
-
 section article.gallery-block div div.artist-list ul li:not(:last-child)::after {
-    content: ", ";
-
-    margin-right: 5px;
+  content: ", ";
+  margin-right: 5px;
 }
-
 section article.gallery-block div div[class$=content] {
-    font-family: "Pretendard", sans-serif;
-    font-size: 20px;
-
-    display: flex;
-    flex-direction: column;
+  font-family: "Pretendard", sans-serif;
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
 }
-
-section article.gallery-block div div[class$=content] table {
-    margin: 0 0 20px;
-    padding: 0;
-
-    border-collapse: separate;
-    border-spacing: 10px;
-}
-
-section article.gallery-block div div[class$=content] table tbody > tr > td:first-child {
-    font-weight: 700;
-}
-
-section article.gallery-block div div[class$=content] table tbody > tr {
-    margin: 10px 0;
-}
-
 section article.gallery-block div div[class$=content] p {
-    margin: 0;
+  margin: 0;
 }
-
+section article.gallery-block div div[class$=content] table {
+  margin: 0 0 20px;
+  padding: 0;
+  border-collapse: separate;
+  border-spacing: 10px;
+}
+section article.gallery-block div div[class$=content] table tbody > tr {
+  margin: 10px 0;
+}
+section article.gallery-block div div[class$=content] table tbody > tr > td:first-child {
+  font-weight: 700;
+}
 section article.gallery-block div div[class$=content] table tbody tr td.relatedtags ul {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
-
 section article.gallery-block div div[class$=content] table tbody tr td.relatedtags ul li {
-    border: 1px solid #00000050;
-    border-radius: 10px;
-
-    padding: 2px 4px;
-    margin: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.3137254902);
+  border-radius: 10px;
+  padding: 2px 4px;
+  margin: 3px;
 }
+
+/*# sourceMappingURL=galleryblock.css.map */
