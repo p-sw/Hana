@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from django.views.generic import View
+from django.views.generic import View, TemplateView
 from django.urls import reverse
 
 from secrets import token_urlsafe
@@ -50,6 +50,10 @@ class UserRegister(View):
         user.save()
         models.InviteToken.objects.filter(token=invtoken).delete()
         return render(request, 'user/register_success.html')
+
+
+class RegisterSuccessTestView(TemplateView):
+    template_name = 'user/register_success.html'
 
 
 class UserLogin(View):
