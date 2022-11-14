@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 import requests
 import json
+from urllib3.exceptions import MaxRetryError
+from requests.exceptions import ConnectTimeout
 
 from main.models import Tag
 
@@ -30,11 +32,17 @@ def image_proxy(request):
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
             "Chrome/106.0.0.0 Safari/537.36"
     }
-    res = requests.get(image_url, headers=header)
+    try:
+        res = requests.get(image_url, headers=header, timeout=3)
+    except (MaxRetryError, ConnectTimeout):
+        return HttpResponse(status=408)
+    print("While proxying image: ", res.status_code)
     if res.status_code == 200:
         return HttpResponse(res.content, content_type=res.headers['Content-Type'])
     else:
-        return HttpResponse(res.content, headers=res.headers, status=res.status_code)
+        header = res.headers
+        del header["Connection"]
+        return HttpResponse(res.content, headers=header, status=res.status_code)
 
 
 def nozomi_proxy(request):

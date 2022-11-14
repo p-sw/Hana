@@ -1,4 +1,5 @@
 var gg = {};
+var successed = [];
 
 class Viewer {
     init(galleryid) {
@@ -79,12 +80,29 @@ class Viewer {
             let url = `/api/get-image?url=${this.getGalleryImageURL(file, "webp")}&gallery=${this.galleryid}`;
             let img = document.createElement('img');
             img.src = url;
+            img.onerror = (e) => {
+                // delayed retry
+                setTimeout(() => {
+                    e.target.src = e.target.src;
+                }, 1500);
+            }
+            img.onload = (e) => {
+                successed.push(files.indexOf(file));
+            }
             if (file.hasavif) {
                 let picture = document.createElement('picture')
                 let source_url = `/api/get-image?url=${this.getGalleryImageURL(file, "avif")}`;
                 let source = document.createElement("source");
                 source.setAttribute("srcset", source_url);
                 source.setAttribute("type", "image/avif");
+                source.onerror = (e) => {
+                    // retry
+                    if (window.confirm("이미지를 불러오지 못했습니다.\n다시 시도할까요?")) {
+                        e.target.src = e.target.src;
+                    } else {
+                        e.target.remove();
+                    }
+                }
                 picture.appendChild(source);
                 picture.appendChild(img);
                 this.drawer.appendChild(picture);
