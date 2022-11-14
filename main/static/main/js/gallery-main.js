@@ -64,6 +64,7 @@ class GalleryBlock {
                     col.appendChild(block.querySelector("div div.artist-list"))
                     col.appendChild(block.querySelector("div div[class*=-content]"))
                     block.querySelector("div").appendChild(col);
+                    block.setAttribute("style", `order: ${nozomi.indexOf(item)};`);
                     document.getElementById("gallery").appendChild(block);
                 })
             }
