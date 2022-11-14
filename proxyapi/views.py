@@ -1,7 +1,9 @@
 from django.contrib.auth.decorators import login_required
-from django.http.response import HttpResponse, HttpResponseForbidden
+from django.http.response import HttpResponse, HttpResponseForbidden, JsonResponse
 
 import requests
+
+from main.models import Tag
 
 
 # Create your views here.
@@ -69,3 +71,18 @@ def galleryblock_proxy(request):
         return HttpResponse(res.content, content_type="text/html")
     else:
         return HttpResponse(status=res.status_code)
+
+
+def get_recommendation_tag(request):
+    current_name = request.GET.get('tag')
+
+    tag_suggests_1 = Tag.objects.filter(name__startswith=current_name).values_list('tagtype', 'name')[:5]
+    res = tag_suggests_1
+    if len(tag_suggests_1) != 5:
+        tag_suggests_2 = Tag.objects.filter(name__contains=current_name).values_list('tagtype', 'name')[:5]
+        res = tag_suggests_2
+        if len(tag_suggests_2) != 5:
+            total_tag_suggests = (list(tag_suggests_1) + list(tag_suggests_2))[:5]
+            res = total_tag_suggests
+
+    return JsonResponse({"tags": [f"{tag_type}:{tag_name}" for tag_type, tag_name in res]})

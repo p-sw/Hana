@@ -17,7 +17,13 @@
         </div>
     </nav>
     <div class="searchbar">
-        <textarea class="searchbar-input" placeholder="태그로 검색"></textarea>
+        <div class="searchbar-container">
+            <div class="searchbar-input">
+                <div class="tags"></div>
+                <input placeholder="태그로 검색">
+            </div>
+            <div class="suggests"></div>
+        </div>
         <button class="search">
             <img src="{% static 'main/image/search.svg' %}" alt="search">
         </button>

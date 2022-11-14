@@ -9,4 +9,5 @@ urlpatterns = [
     path('get-nozomi', views.nozomi_proxy, name='nozomi_proxy'),
     path('get-js', views.js_proxy, name='js_proxy'),
     path('get-galleryblock', views.galleryblock_proxy, name='galleryblock_proxy'),
+    path('get-recommendation-tag', views.get_recommendation_tag, name='get_recommendation_tag'),
 ]
