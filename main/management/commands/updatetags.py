@@ -26,7 +26,7 @@ class Command(BaseCommand):
     help = "Get tags from hitomi.la, and update database."
 
     def add_arguments(self, parser):
-        parser.add_argument('--tabs', type=str, help="Tags, Artists, Series, Characters, All", default="all")
+        parser.add_argument('--tabs', type=str, help="Tags, Artists, Series, Characters, Languages, All", default="all")
         parser.add_argument('--threads', type=int, help="Number of threads", default=2)
         parser.add_argument('--singlethread', type=bool, help="Single thread", default=False)
 
@@ -59,26 +59,27 @@ class Command(BaseCommand):
             if t.lower() == "all" or t.lower() == "characters":
                 self.get_characters()
 
-        self.stdout.write(self.style.WARNING("Adding language tags..."))
-        languages = [
-            "indonessian", "javanese", "catalan", "cebuano", "czech", "danish", "german", "estonian",
-            "english", "spanish", "esperanto", "french", "hindi", "icelandic", "italian", "latin", "hungarian",
-            "dutch", "norwegian", "polish", "portuguese", "romanian", "albanian", "russian", "slovak",
-            "serbian", "finnish", "swedish", "tagalog", "vietnamese", "turkish", "greek", "bulgarian",
-            "mongolian", "russian", "ukrainian", "hebrew", "arabic", "persian", "korean", "thai", "chinese",
-            "japanese"
-        ]
-        for language in languages:
-            res = requests.get(f"https://ltn.hitomi.la/n/index-{language}.nozomi", headers={
-                "Content-Type": "arraybuffer",
-                "origin": "https://hitomi.la",
-                "referer": "https://hitomi.la/"
-            })
-            counts = 0
-            if res.status_code in [200, 206]:
-                counts = len(res.content) // 4
+        if t.lower() == "all" or t.lower() == "languages":
+            self.stdout.write(self.style.WARNING("Adding language tags..."))
+            languages = [
+                "indonessian", "javanese", "catalan", "cebuano", "czech", "danish", "german", "estonian",
+                "english", "spanish", "esperanto", "french", "hindi", "icelandic", "italian", "latin", "hungarian",
+                "dutch", "norwegian", "polish", "portuguese", "romanian", "albanian", "russian", "slovak",
+                "serbian", "finnish", "swedish", "tagalog", "vietnamese", "turkish", "greek", "bulgarian",
+                "mongolian", "russian", "ukrainian", "hebrew", "arabic", "persian", "korean", "thai", "chinese",
+                "japanese"
+            ]
+            for language in languages:
+                res = requests.get(f"https://ltn.hitomi.la/n/index-{language}.nozomi", headers={
+                    "Content-Type": "arraybuffer",
+                    "origin": "https://hitomi.la",
+                    "referer": "https://hitomi.la/"
+                })
+                counts = 0
+                if res.status_code in [200, 206]:
+                    counts = len(res.content) // 4
 
-            Tag.objects.update_or_insert(name=language, tagtype="language", gallery_count=counts)
+                Tag.objects.update_or_insert(name=language, tagtype="language", gallery_count=counts)
 
     def get_tags(self):
         global tag_queue
