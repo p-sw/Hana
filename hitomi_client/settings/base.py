@@ -2,20 +2,28 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+]
+
+THIRD_PARTY_APPS = [
     'constance',
     'constance.backends.database',
+]
+
+PROJECT_APPS = [
     'user',
     'main',
     'viewer',
     'front',
 ]
+
+INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -105,3 +113,8 @@ CONSTANCE_CONFIG_FIELDSETS = {
 }
 
 LOGIN_URL = 'front:index'  # 'user:login'
+
+CRONJOBS = [
+    # hourly
+    ('0 * * * *', 'main.cron.update_gallery', '>> ' + str(BASE_DIR / 'gallery.log')),
+]
