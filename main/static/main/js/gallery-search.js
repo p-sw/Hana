@@ -1,3 +1,63 @@
+class PageNavigator {
+    constructor(pages) {
+        this.max_page = pages
+
+        this.query = decodeURIComponent(window.location.search);
+        if (/[?&]page=\d+/.test(this.query)) {
+            this.current_page = parseInt(/[?&]page=(\d+)/.exec(this.query)[1], 10);
+        } else {
+            this.current_page = 1;
+        }
+
+        /* configurations */
+        this.build_parent = document.querySelector("section#page-navigation")
+
+        this.page_button_per_page = 10;
+    }
+
+    build() {
+        let page_navigator = document.createElement("nav");
+        page_navigator.classList.add("page-navigator");
+
+        let page_min = Math.floor(this.current_page / 10) * 10 + 1;
+        let page_max = Math.min(page_min + (this.page_button_per_page - 1), this.max_page);
+
+        let page_prev = document.createElement("a");
+        page_prev.classList.add("page-prev");
+        page_prev.href = this.build_query(this.current_page - 1);
+        page_navigator.appendChild(page_prev);
+
+        for (let i=page_min;i<=page_max;i++) {
+            let page_button = document.createElement("a");
+            page_button.classList.add("page-button");
+            page_button.href = this.build_query(i);
+            page_button.innerText = i.toString();
+            if (i === this.current_page) {
+                page_button.classList.add("current-page");
+                page_button.href = '';
+            }
+            page_navigator.appendChild(page_button);
+        }
+
+        let page_next = document.createElement("a");
+        page_next.classList.add("page-next");
+        page_next.href = this.build_query(this.current_page + 1);
+        page_navigator.appendChild(page_next);
+
+        this.build_parent.appendChild(page_navigator);
+    }
+
+    build_query(page) {
+        if (/[?&]page=\d+/.test(this.query)) {
+            return this.query.replace(/page=\d+/, `page=${page}`);
+        } else if (this.query.length){
+            return `${this.query}&page=${page}`;
+        } else {
+            return `?page=${page}`;
+        }
+    }
+}
+
 class GalleryBlock {
     constructor() {
         this.galleries_per_page = 25;
@@ -9,9 +69,6 @@ class GalleryBlock {
         }
 
         this.query_tags = /[?&]tags=([+\-a-z_:]+)/.exec(this.query)[1];
-
-        this.start_byte = (this.page - 1) * this.galleries_per_page * 4;
-        this.end_byte = this.start_byte + this.galleries_per_page * 4 - 1;
 
         this.sort(this.query_tags);
     }
@@ -27,9 +84,15 @@ class GalleryBlock {
         }).then(response => {
             return response.arrayBuffer();
         }).then(buffer => {
-            const view = new DataView(buffer);
+            return new DataView(buffer);
+        }).then(view => {
+            const total_galleries = view.byteLength / 4;
+
+            let page_navigator = new PageNavigator(Math.ceil(total_galleries / this.galleries_per_page));
+            page_navigator.build();
+
             const results = [];
-            for (let i = 0; i < view.byteLength/4; i++) {
+            for (let i = (this.page - 1) * this.galleries_per_page; i < Math.min( this.page * this.galleries_per_page, total_galleries); i++) {
                 results.push(view.getInt32(i*4, false));
             }
             return results;
@@ -99,12 +162,15 @@ class GalleryBlock {
             }
         }).then((data) => {
             // final
-            document.querySelector("#result-length").innerText = data.length;
-            this.put(data.slice((this.page - 1) * this.galleries_per_page, this.page * this.galleries_per_page));
+            let result_length_element = document.querySelector("#result-length");
+            result_length_element.innerText = data.length;
+            result_length_element.parentElement.parentElement.removeAttribute("style");
+            this.put(data);
         })
     }
 
     put(items) {
+        document.querySelector("#loading-content").remove();
         for (let id of items) {
             fetch(`/api/get-galleryblock?id=${id}`, {
                 method: 'GET',
