@@ -50,11 +50,17 @@ class QueryArea {
 
     input() {
         this.suggestor.innerHTML = '';
-        let query = /(?:[^:]+:)?([a-zA-Z_\s]*)/.exec(this.queryArea.value)[1];
+
+        let queryMatch = /(([^:]+):)?([a-zA-Z_\s]*)/.exec(this.queryArea.value);
+        let type = queryMatch[2];
+        let query = queryMatch[3];
         let appendedTags = this.tag_container.children;
         let body = {}
         if (query.length > 0) {
             body['tag'] = query;
+            if (type) {
+                body['type'] = type;
+            }
             if (appendedTags.length > 0) {
                 body['ban'] = [];
                 for (let i = 0; i < appendedTags.length; i++) {

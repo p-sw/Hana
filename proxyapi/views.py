@@ -115,22 +115,47 @@ def galleryblock_proxy(request):
 @csrf_exempt
 def get_recommendation_tag(request):
     POST: dict = json.loads(request.body)
-    current_name = POST.get("tag")
-    ban_ids = POST.get("ban")
+    current_name = POST.get("tag") or ""
+    query_type = POST.get("type") or ""
+    ban_ids = POST.get("ban") or []
 
-    def get_tags(name_query: str, excludes: list = None):
+    def get_tags(type_query: str, type_filter: str, name_query: str, name_filter: str, excludes: list = None):
+        filter_kwargs = {}
+        if type_query:
+            filter_kwargs["tagtype__"+type_filter] = type_query
+        if name_query:
+            filter_kwargs["name__"+name_filter] = name_query
         if excludes:
-            return Tag.objects.exclude(id__in=excludes).filter(name__startswith=name_query).values_list('id', 'tagtype', 'name')[:5]
+            return Tag.objects.exclude(id__in=excludes).filter(**filter_kwargs).values_list('id', 'tagtype', 'name')[:5]
         else:
-            return Tag.objects.filter(name__startswith=name_query).values_list('id', 'tagtype', 'name')[:5]
+            return Tag.objects.filter(**filter_kwargs).values_list('id', 'tagtype', 'name')[:5]
 
-    tag_suggests_1 = get_tags(current_name, ban_ids)
-    res = tag_suggests_1
-    if len(tag_suggests_1) != 5:
-        tag_suggests_2 = get_tags(current_name, ban_ids)
-        res = tag_suggests_2
-        if len(tag_suggests_2) != 5:
-            total_tag_suggests = (list(tag_suggests_1) + list(tag_suggests_2))[:5]
-            res = total_tag_suggests
+    def suggest_trys(trys):
+        totals = []
+        for try_dict in trys:
+            res = get_tags(**try_dict)
+            if len(res) == 5:
+                return res
+            else:
+                totals += res
+                continue
+        return totals
 
-    return JsonResponse({tag_id: f"{tag_type}:{tag_name}" for tag_id, tag_type, tag_name in res})
+    result = suggest_trys([
+        {
+            "type_query": query_type,
+            "type_filter": "startswith",
+            "name_query": current_name,
+            "name_filter": "startswith",
+            "excludes": ban_ids
+        },
+        {
+            "type_query": query_type,
+            "type_filter": "startswith",
+            "name_query": current_name,
+            "name_filter": "in",
+            "excludes": ban_ids
+        }
+    ])
+
+    return JsonResponse({tag_id: f"{tag_type}:{tag_name}" for tag_id, tag_type, tag_name in result})
