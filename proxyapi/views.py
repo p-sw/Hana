@@ -1,12 +1,10 @@
 import urllib3.exceptions
 from django.contrib.auth.decorators import login_required
-from django.http.response import HttpResponse, HttpResponseForbidden, JsonResponse
+from django.http.response import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 import requests
 import json
-from urllib3.exceptions import MaxRetryError
-from requests.exceptions import ConnectTimeout
 
 from main.models import Tag
 
@@ -35,7 +33,7 @@ def image_proxy(request):
     }
     try:
         res = requests.get(image_url, headers=header, timeout=3)
-    except (MaxRetryError, ConnectTimeout):
+    except (urllib3.exceptions.MaxRetryError, requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError):
         return HttpResponse(status=408)
     print("While proxying image: ", res.status_code)
     if res.status_code == 200:
@@ -75,7 +73,7 @@ def nozomi_proxy(request):
         try:
             res = requests.get(request_url, headers=req_header)
             fail = False
-        except (requests.exceptions.ConnectionError, urllib3.exceptions.ConnectionError):
+        except (requests.exceptions.ConnectionError, urllib3.exceptions.ConnectionError, requests.exceptions.ConnectTimeout):
             continue
     if not res:
         return HttpResponse(status=500)
@@ -91,9 +89,12 @@ def nozomi_proxy(request):
 
 
 def js_proxy(request):
-    res = requests.get(request.GET.get('url'), headers={
-        "Content-Type": "text/javascript",
-    })
+    try:
+        res = requests.get(request.GET.get('url'), headers={
+            "Content-Type": "text/javascript",
+        })
+    except (requests.exceptions.ConnectionError, urllib3.exceptions.ConnectionError, requests.exceptions.ConnectTimeout):
+        return HttpResponse(status=500)
 
     if res.status_code == 200:
         return HttpResponse(res.content, content_type="text/javascript")
@@ -102,9 +103,12 @@ def js_proxy(request):
 
 
 def galleryblock_proxy(request):
-    res = requests.get(f"https://ltn.hitomi.la/galleryblock/{request.GET.get('id')}.html", headers={
-        "Content-Type": "text/html",
-    })
+    try:
+        res = requests.get(f"https://ltn.hitomi.la/galleryblock/{request.GET.get('id')}.html", headers={
+            "Content-Type": "text/html",
+        })
+    except (requests.exceptions.ConnectionError, urllib3.exceptions.ConnectionError, requests.exceptions.ConnectTimeout):
+        return HttpResponse(status=500)
 
     if res.status_code == 200:
         return HttpResponse(res.content, content_type="text/html")
