@@ -68,48 +68,79 @@ class PageNavigator {
     }
 }
 
-class GalleryBlock {
-    constructor() {
-        this.galleries_per_page = 25;
-        this.query = decodeURIComponent(window.location.search);
-        if (/[?&]page=\d+/.test(this.query)) {
-            this.page = parseInt(/[?&]page=(\d+)/.exec(this.query)[1], 10);
-        } else {
-            this.page = 1;
-        }
-
-        this.query_tags = /[?&]tags=([+\-a-z_:]+)/.exec(this.query)[1];
-
-        this.sort(this.query_tags);
+class SearchObject {
+    constructor(caller) {
+        this.caller = caller;
     }
 
-    sort(tags) {
-        this.positives = Array.prototype.map.call([...tags.matchAll(/\+([a-z:_]+)/g)], (m) => m[1].replace("_", " "));
-        this.negatives = Array.prototype.map.call([...tags.matchAll(/-([a-z:_]+)/g)], (m) => m[1].replace("_", " "));
-    }
-
-    load(area, tag, language) {
-        return fetch(`/api/get-nozomi?area=${area}&tag=${tag}&language=${language}&comp_prefix=n`, {
-            method: 'GET',
-        }).then(response => {
-            return response.arrayBuffer();
-        }).then(buffer => {
-            return new DataView(buffer);
-        }).then(view => {
-            this.total_galleries = view.byteLength / 4;
-
-            let page_navigator = new PageNavigator(Math.ceil(this.total_galleries / this.galleries_per_page));
-            page_navigator.build();
-
-            const results = [];
-            for (let i = (this.page - 1) * this.galleries_per_page; i < Math.min( this.page * this.galleries_per_page, this.total_galleries); i++) {
-                results.push(view.getInt32(i*4, false));
+    entrypoint() {
+        new Promise((resolve, reject) => {
+            // first result
+            if (!this.caller.positives.length) {
+                this.caller.load(
+                    this.caller.objToQuery({area: '', tag: 'index', language: 'all'})
+                ).then((data) => {
+                    resolve(data);
+                })
+            } else {
+                this.caller.load(
+                    this.caller.objToQuery(
+                        this.tag_processor(
+                            this.caller.positives.shift()
+                        )
+                    )
+                ).then((data) => {
+                    resolve(data);
+                })
             }
-            return results;
+        }).then((data) => {
+            // positive
+            if (this.caller.positives.length) {
+                console.log(data);
+                return Promise.all(this.caller.positives.map(tag => {
+                    return new Promise((resolve, reject) => {
+                        this.caller.load(
+                            this.caller.objToQuery(
+                                this.tag_processor(tag)
+                            )
+                        ).then(new_results => {
+                            const new_results_set = new Set(new_results);
+                            resolve(data.filter(gallery => new_results_set.has(gallery)));
+                        });
+                    });
+                }));
+            } else {
+                return data;
+            }
+        }).then((data) => {
+            // negative
+            if (this.caller.negatives.length) {
+                return Promise.all(this.caller.negatives.map(tag => {
+                    return new Promise((resolve, reject) => {
+                        return new Promise((resolve, reject) => {
+                            this.caller.load(
+                                this.caller.objToQuery(
+                                    this.tag_processor(tag)
+                                )
+                            ).then(new_results => {
+                                const new_results_set = new Set(new_results);
+                                resolve(data.filter(gallery => !new_results_set.has(gallery)));
+                            });
+                        });
+                    });
+                }));
+            } else {
+                return data;
+            }
+        }).then((data) => {
+            let result_length_element = document.querySelector("#result-length");
+            result_length_element.innerText = this.caller.total_galleries;
+            result_length_element.parentElement.parentElement.removeAttribute("style");
+            this.caller.put(data);
         })
     }
 
-    process_tag(tag) {
+    tag_processor(tag) {
         const sides = tag.split(":");
         const ns = sides[0];
         let tag_r = sides[1];
@@ -125,57 +156,64 @@ class GalleryBlock {
             tag_r = 'index';
         }
 
-        return this.load(area, tag_r, language)
+        return {'area': area, 'tag': tag_r, 'language': language};
+    }
+}
+
+class GalleryBlock {
+    constructor() {
+        this.galleries_per_page = 25;
+        this.query = decodeURIComponent(window.location.href.replace(/.*sserve\.work\//, ''));
+        if (/^\?page=\d+$/.test(this.query)) {
+            this.page = parseInt(this.query.replace(/^\?page=/, ''), 10);
+        } else {
+            this.page = 1;
+        }
+
+        this.query_tags = /[?&]tags=([+\-a-z_:]+)/.exec(this.query);
+        if (this.query_tags) {
+            this.query_tags = this.query_tags[1]
+            this.positives = Array.prototype.map.call(
+                [...this.query_tags.matchAll(/\+([a-z:_]+)/g)],
+                (m) => m[1].replace("_", " "));
+            this.negatives = Array.prototype.map.call(
+                [...this.query_tags.matchAll(/-([a-z:_]+)/g)],
+                (m) => m[1].replace("_", " "));
+            this.search_page = true;
+            this.processor = new SearchObject(this);
+        } else {
+            this.search_page = false;
+        }
     }
 
-    process_executor() {
-        new Promise((resolve, reject) => {
-            // first result
-            if (!this.positives.length) {
-                this.load(undefined, 'index', 'all').then((data) => {
-                    resolve(data);
-                })
-            } else {
-                this.process_tag(this.positives.shift()).then((data) => {
-                    resolve(data);
-                })
-            }
-        }).then((data) => {
-            // positive
-            if (this.positives.length) {
-                console.log(data);
-                return Promise.all(this.positives.map(tag => {
-                    return new Promise((resolve, reject) => {
-                        this.process_tag(tag).then(new_results => {
-                            const new_results_set = new Set(new_results);
-                            resolve(data.filter(galleryid => new_results_set.has(galleryid)));
-                        });
-                    });
-                }));
-            } else {
-                return data;
-            }
+    entrypoint() {
+        if (this.search_page) {
+            this.processor.entrypoint();
+        } else {
+            this.load('').then((gallery_ids) => {
+                this.put(gallery_ids);
+            });
+        }
+    }
 
+    load(query) {
+        return fetch(`/api/get-nozomi${query}`, {
+            method: 'GET',
+        }).then(response => {
+            return response.arrayBuffer();
+        }).then((buffer) => {
+            return new DataView(buffer);
         }).then((data) => {
-            // negative
-            if (this.negatives.length) {
-                return Promise.all(this.negatives.map(tag => {
-                    return new Promise((resolve, reject) => {
-                        this.process_tag(tag).then(new_results => {
-                            const new_results_set = new Set(new_results);
-                            resolve(data.filter(galleryid => !new_results_set.has(galleryid)));
-                        });
-                    });
-                }));
-            } else {
-                return data;
+            this.total_galleries = data.byteLength / 4;
+            // init page navigator
+            let page_navigator = new PageNavigator(Math.ceil(this.total_galleries / this.galleries_per_page));
+            page_navigator.build();
+
+            let result = [];
+            for (let i=(this.page - 1) * this.galleries_per_page;i<Math.min(this.total_galleries, this.galleries_per_page * this.page);i++) {
+                result.push(data.getUint32(i*4, false));
             }
-        }).then((data) => {
-            // final
-            let result_length_element = document.querySelector("#result-length");
-            result_length_element.innerText = this.total_galleries;
-            result_length_element.parentElement.parentElement.removeAttribute("style");
-            this.put(data);
+            return result;
         })
     }
 
@@ -231,7 +269,15 @@ class GalleryBlock {
             })
         }
     }
+
+    objToQuery(obj) {
+        let result = [];
+        for (let key in obj) {
+            result.push(`${key}=${obj[key]}`);
+        }
+        return "?"+result.join('&');
+    }
 }
 
-const search = new GalleryBlock();
-search.process_executor();
+gallery = new GalleryBlock();
+gallery.entrypoint();
