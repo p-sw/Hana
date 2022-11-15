@@ -70,11 +70,22 @@ class Command(BaseCommand):
                 "japanese"
             ]
             for language in languages:
-                res = requests.get(f"https://ltn.hitomi.la/n/index-{language}.nozomi", headers={
-                    "Content-Type": "arraybuffer",
-                    "origin": "https://hitomi.la",
-                    "referer": "https://hitomi.la/"
-                })
+                success = False
+                while not success:
+                    try:
+                        res = requests.get(f"https://ltn.hitomi.la/n/index-{language}.nozomi", headers={
+                            "Content-Type": "arraybuffer",
+                            "origin": "https://hitomi.la",
+                            "referer": "https://hitomi.la/"
+                        })
+                        if res.status_code == 200:
+                            success = True
+                        else:
+                            time.sleep(1)
+                    except (ConnectionError, ConnectTimeout, ProtocolError):
+                        self.stdout.write(self.style.WARNING(f"Failed to connect to hitomi.la"))
+                        self.stdout.write(self.style.WARNING(f"Retrying..."))
+                        continue
                 counts = 0
                 if res.status_code in [200, 206]:
                     counts = len(res.content) // 4
