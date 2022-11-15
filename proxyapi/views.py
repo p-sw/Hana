@@ -146,7 +146,7 @@ def get_recommendation_tag(request):
     def suggest_trys(trys):
         totals = []
         for try_dict in trys:
-            try_dict["excludes"] += totals
+            try_dict["excludes"] += [i[0] for i in totals]
             res = get_tags(**try_dict)
             if len(res) == search_result_limit and len(totals) == 0:
                 return res
