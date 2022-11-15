@@ -28,25 +28,36 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--tabs', type=str, help="Tags, Artists, Series, Characters, All", default="all")
         parser.add_argument('--threads', type=int, help="Number of threads", default=2)
+        parser.add_argument('--singlethread', type=bool, help="Single thread", default=False)
 
     def handle(self, *args, **options):
         t = options['tabs']
         all_workers = []
-        for i in range(options['threads']):
+        if not options['singlethread']:
+            for i in range(options['threads']):
+                if t.lower() == "all" or t.lower() == "tags":
+                    all_workers.append(threading.Thread(target=self.get_tags))
+                if t.lower() == "all" or t.lower() == "artists":
+                    all_workers.append(threading.Thread(target=self.get_artists))
+                if t.lower() == 'all' or t.lower() == "series":
+                    all_workers.append(threading.Thread(target=self.get_series))
+                if t.lower() == "all" or t.lower() == "characters":
+                    all_workers.append(threading.Thread(target=self.get_characters))
+
+            for worker in all_workers:
+                worker.start()
+
+            for worker in all_workers:
+                worker.join()
+        else:
             if t.lower() == "all" or t.lower() == "tags":
-                all_workers.append(threading.Thread(target=self.get_tags))
+                self.get_tags()
             if t.lower() == "all" or t.lower() == "artists":
-                all_workers.append(threading.Thread(target=self.get_artists))
+                self.get_artists()
             if t.lower() == 'all' or t.lower() == "series":
-                all_workers.append(threading.Thread(target=self.get_series))
+                self.get_series()
             if t.lower() == "all" or t.lower() == "characters":
-                all_workers.append(threading.Thread(target=self.get_characters))
-
-        for worker in all_workers:
-            worker.start()
-
-        for worker in all_workers:
-            worker.join()
+                self.get_characters()
 
         self.stdout.write(self.style.WARNING("Adding language tags..."))
         languages = [
