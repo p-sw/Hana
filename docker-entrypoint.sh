@@ -7,4 +7,4 @@ echo "Migrating database"
 python manage.py migrate
 
 echo "Starting server"
-hypercorn hitomi_client.asgi:application 0.0.0.0:5003
+hypercorn hitomi_client.asgi:application -b 0.0.0.0:5000

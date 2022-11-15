@@ -1,4 +1,5 @@
 var gg = {};
+var successed = [];
 
 class Viewer {
     init(galleryid) {
@@ -79,6 +80,19 @@ class Viewer {
             let url = `/api/get-image?url=${this.getGalleryImageURL(file, "webp")}&gallery=${this.galleryid}`;
             let img = document.createElement('img');
             img.src = url;
+            img.onerror = (e) => {
+                // delayed retry
+                setTimeout(() => {
+                    if (/&t=/.test(e.target.src)) {
+                        e.target.src = e.target.src.replace(/&t=\d+/, `&t=${Date.now()}`);
+                    } else {
+                        e.target.src = e.target.src + "&t=" + Date.now();
+                    }
+                }, 1500);
+            }
+            img.onload = (e) => {
+                successed.push(files.indexOf(file));
+            }
             if (file.hasavif) {
                 let picture = document.createElement('picture')
                 let source_url = `/api/get-image?url=${this.getGalleryImageURL(file, "avif")}`;
