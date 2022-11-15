@@ -1,3 +1,4 @@
+import urllib3.exceptions
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -59,12 +60,23 @@ def nozomi_proxy(request):
     if start_byte and end_byte:
         req_header['Range'] = f"bytes={start_byte}-{end_byte}"
 
-    res = requests.get(request_url, headers=req_header)
+    res = None
+    fail = True
+    while fail:
+        try:
+            res = requests.get(request_url, headers=req_header)
+            fail = False
+        except (requests.exceptions.ConnectionError, urllib3.exceptions.ConnectionError):
+            continue
+    if not res:
+        return HttpResponse(status=500)
 
     if res.status_code in [200, 206]:
-        return_header = res.headers
-        del return_header["Connection"]
-        return HttpResponse(res.content, headers=return_header, status=res.status_code)
+        # repack
+        if compressed:
+            return HttpResponse(res.content, content_type="arraybuffer", status=res.status_code)
+        else:
+            return HttpResponse(res.content, content_type="arraybuffer", status=res.status_code)
     else:
         return HttpResponse(status=res.status_code)
 

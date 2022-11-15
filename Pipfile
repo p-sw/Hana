@@ -13,7 +13,6 @@ libsass = "*"
 django-compressor = "*"
 django-sass-processor = "*"
 hypercorn = "*"
-django-crontab = "*"
 
 [dev-packages]
 

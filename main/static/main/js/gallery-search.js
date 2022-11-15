@@ -24,21 +24,15 @@ class GalleryBlock {
     load(area, tag, language) {
         return fetch(`/api/get-nozomi?area=${area}&tag=${tag}&language=${language}&comp_prefix=n`, {
             method: 'GET',
-            headers: {
-                "Content-Type": "application/x-nozomi",
-            }
         }).then(response => {
-            // this.total_items = parseInt(response.headers.get("Content-Range").replace(/^[Bb]ytes \d+-\d+\//, '')) / 4;
             return response.arrayBuffer();
-        }).then((buffer) => {
-            return new DataView(buffer);
-        }).then((data) => {
-            const total = data.byteLength / 4;
-            let nozomi = [];
-            for (let i=0;i<total;i++) {
-                nozomi.push(data.getUint32(i*4, false));
+        }).then(buffer => {
+            const view = new DataView(buffer);
+            const results = [];
+            for (let i = 0; i < view.byteLength/4; i++) {
+                results.push(view.getInt32(i*4, false));
             }
-            return nozomi;
+            return results;
         })
     }
 
@@ -69,40 +63,50 @@ class GalleryBlock {
                     resolve(data);
                 })
             } else {
-                this.process_tag(this.positives[0]).then((data) => {
+                this.process_tag(this.positives.shift()).then((data) => {
                     resolve(data);
                 })
             }
         }).then((data) => {
             // positive
-            return Promise.all(this.positives.map(tag => {
-                return new Promise((resolve, reject) => {
-                    this.process_tag(tag).then(new_results => {
-                        const new_results_set = new Set(new_results);
-                        resolve(data.filter(galleryid => new_results_set.has(galleryid)));
+            if (this.positives.length) {
+                console.log(data);
+                return Promise.all(this.positives.map(tag => {
+                    return new Promise((resolve, reject) => {
+                        this.process_tag(tag).then(new_results => {
+                            const new_results_set = new Set(new_results);
+                            resolve(data.filter(galleryid => new_results_set.has(galleryid)));
+                        });
                     });
-                });
-            }));
+                }));
+            } else {
+                return data;
+            }
+
         }).then((data) => {
             // negative
-            return Promise.all(this.negatives.map(tag => {
-                return new Promise((resolve, reject) => {
-                    this.process_tag(tag).then(new_results => {
-                        const new_results_set = new Set(new_results);
-                        resolve(data.filter(galleryid => !new_results_set.has(galleryid)));
+            if (this.negatives.length) {
+                return Promise.all(this.negatives.map(tag => {
+                    return new Promise((resolve, reject) => {
+                        this.process_tag(tag).then(new_results => {
+                            const new_results_set = new Set(new_results);
+                            resolve(data.filter(galleryid => !new_results_set.has(galleryid)));
+                        });
                     });
-                });
-            }));
+                }));
+            } else {
+                return data;
+            }
         }).then((data) => {
             // final
             document.querySelector("#result-length").innerText = data.length;
-            this.put(data);
+            this.put(data.slice((this.page - 1) * this.galleries_per_page, this.page * this.galleries_per_page));
         })
     }
 
     put(items) {
         for (let id of items) {
-            fetch(`/api/get-galleryblock?id=${item}`, {
+            fetch(`/api/get-galleryblock?id=${id}`, {
                 method: 'GET',
             }).then(response => {
                 return response.text();
@@ -133,7 +137,7 @@ class GalleryBlock {
                 col.appendChild(block.querySelector("div div.artist-list"))
                 col.appendChild(block.querySelector("div div[class*=-content]"))
                 block.querySelector("div").appendChild(col);
-                block.setAttribute("style", `order: ${nozomi.indexOf(item)};`);
+                block.setAttribute("style", `order: ${items.indexOf(id)};`);
                 document.getElementById("gallery").appendChild(block);
             })
         }
