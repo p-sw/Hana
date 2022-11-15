@@ -143,7 +143,7 @@ class Command(BaseCommand):
                 tag_count = int(re.compile(r"\((\d+)\)").match(m[index][1]).group(1))
                 Tag.objects.update_or_insert(name=tag_name, tagtype=tag_type, gallery_count=tag_count)
 
-        self.stdout.write(f"Thread {threading.get_ident()}: Done artists thread with job {i}")
+        self.stdout.write(f"Thread {threading.get_ident()}: Done tag thread with job {i}")
 
     def get_artists(self):
         global artists_queue
