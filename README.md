@@ -1,2 +1,2 @@
-# ToDo
-1. 404 index link 바꾸기
+A Modern Hitomi Client.  
+[Website](https://hana.sserve.work)
