@@ -80,17 +80,17 @@ class Command(BaseCommand):
                         })
                         if res.status_code == 200:
                             success = True
+                            counts = len(res.content) // 4
+                            Tag.objects.update_or_insert(name=language, tagtype="language", gallery_count=counts)
                         else:
                             time.sleep(1)
                     except (ConnectionError, ConnectTimeout, ProtocolError):
                         self.stdout.write(self.style.WARNING(f"Failed to connect to hitomi.la"))
                         self.stdout.write(self.style.WARNING(f"Retrying..."))
                         continue
-                counts = 0
-                if res.status_code in [200, 206]:
-                    counts = len(res.content) // 4
 
-                Tag.objects.update_or_insert(name=language, tagtype="language", gallery_count=counts)
+
+
 
     def get_tags(self):
         global tag_queue
