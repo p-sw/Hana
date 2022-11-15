@@ -163,7 +163,7 @@ class SearchObject {
 class GalleryBlock {
     constructor() {
         this.galleries_per_page = 25;
-        this.query = decodeURIComponent(window.location.href.replace(/.*sserve\.work\//, ''));
+        this.query = decodeURIComponent(window.location.search);
         if (/^\?page=\d+$/.test(this.query)) {
             this.page = parseInt(this.query.replace(/^\?page=/, ''), 10);
         } else {

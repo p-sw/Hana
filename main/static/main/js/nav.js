@@ -118,7 +118,7 @@ class QueryArea {
             for (let i = 0; i < appendedTags.length; i++) {
                 query += appendedTags[i].querySelector("input:checked").value+appendedTags[i].dataset.tag;
             }
-            window.location.href = `/app/search?tags=${query}`;
+            window.location.href = `/app?tags=${query}`;
         }
     }
 }
