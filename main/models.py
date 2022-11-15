@@ -21,6 +21,7 @@ class Tag(models.Model):
         ('character', 'Character'),
         ('language', 'Language'),
     ))
+    gallery_count = models.IntegerField(default=0)
 
     objects = TagManager()
 
