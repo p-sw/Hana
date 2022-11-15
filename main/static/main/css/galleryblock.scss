@@ -135,6 +135,10 @@ section#gallery {
         display: flex;
         flex-direction: column;
 
+        a:not([href]) {
+          cursor: default;
+        }
+
         p {
           margin: 0;
         }

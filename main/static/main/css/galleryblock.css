@@ -106,6 +106,9 @@ section#gallery article.gallery-block div div[class$=content] {
   display: flex;
   flex-direction: column;
 }
+section#gallery article.gallery-block div div[class$=content] a:not([href]) {
+  cursor: default;
+}
 section#gallery article.gallery-block div div[class$=content] p {
   margin: 0;
 }
