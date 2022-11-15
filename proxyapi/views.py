@@ -134,13 +134,12 @@ def get_recommendation_tag(request):
         if excludes:
             return Tag.objects.exclude(
                 id__in=excludes
-            ).filter(**filter_kwargs).order_by('-gallery_count').values_list('id', 'tagtype', 'name', "gallery_count")
+            ).filter(**filter_kwargs).order_by('-gallery_count').values_list('id', 'tagtype', 'name')
         else:
             return Tag.objects.filter(**filter_kwargs).order_by('-gallery_count').values_list(
                 'id',
                 'tagtype',
                 'name',
-                "gallery_count"
             )
 
     def suggest_trys(trys):
