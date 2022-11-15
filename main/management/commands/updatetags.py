@@ -4,6 +4,7 @@ from main.models import Tag
 import requests
 import re
 import time
+import threading
 
 from bs4 import BeautifulSoup as bs
 
@@ -11,87 +12,68 @@ from requests.exceptions import ConnectionError
 from requests.exceptions import ConnectTimeout
 from urllib3.exceptions import ProtocolError
 
+MALE_PREFIX = 9792
+
+tag_queue = list(range(96, 123))
+artists_queue = list(range(96, 123))
+series_queue = list(range(96, 123))
+characters_queue = list(range(96, 123))
+
+locker = threading.Lock()
+
 
 class Command(BaseCommand):
     help = "Get tags from hitomi.la, and update database."
 
     def add_arguments(self, parser):
-        parser.add_argument('tabs', nargs='+', type=str, help="Tags, Artists, Series, Characters, All")
+        parser.add_argument('--tabs', type=str, help="Tags, Artists, Series, Characters, All", default="all")
+        parser.add_argument('--threads', type=int, help="Number of threads", default=2)
 
     def handle(self, *args, **options):
-        t = options['tabs'][0]
-        if t.lower() == "all":
-            self.get_tags()
-            self.get_artists()
-            self.get_series()
-            self.get_characters()
-        elif t.lower() == "tags":
-            self.get_tags()
-        elif t.lower() == "artists":
-            self.get_artists()
-        elif t.lower() == "series":
-            self.get_series()
-        elif t.lower() == "characters":
-            self.get_characters()
+        t = options['tabs']
+        all_workers = []
+        for i in range(options['threads']):
+            if t.lower() == "all" or t.lower() == "tags":
+                all_workers.append(threading.Thread(target=self.get_tags))
+            if t.lower() == "all" or t.lower() == "artists":
+                all_workers.append(threading.Thread(target=self.get_artists))
+            if t.lower() == 'all' or t.lower() == "series":
+                all_workers.append(threading.Thread(target=self.get_series))
+            if t.lower() == "all" or t.lower() == "characters":
+                all_workers.append(threading.Thread(target=self.get_characters))
 
-        self.stdout.write(self.style.SUCCESS('Successfully updated tags'))
+        for worker in all_workers:
+            worker.start()
+
+        for worker in all_workers:
+            worker.join()
+
         self.stdout.write(self.style.WARNING("Adding language tags..."))
         languages = [
-            "indonessian",
-            "javanese",
-            "catalan",
-            "cebuano",
-            "czech",
-            "danish",
-            "german",
-            "estonian",
-            "english",
-            "spanish",
-            "esperanto",
-            "french",
-            "hindi",
-            "icelandic",
-            "italian",
-            "latin",
-            "hungarian",
-            "dutch",
-            "norwegian",
-            "polish",
-            "portuguese",
-            "romanian",
-            "albanian",
-            "russian",
-            "slovak",
-            "serbian",
-            "finnish",
-            "swedish",
-            "tagalog",
-            "vietnamese",
-            "turkish",
-            "greek",
-            "bulgarian",
-            "mongolian",
-            "russian",
-            "ukrainian",
-            "hebrew",
-            "arabic",
-            "persian",
-            "korean",
-            "thai",
-            "chinese",
+            "indonessian", "javanese", "catalan", "cebuano", "czech", "danish", "german", "estonian",
+            "english", "spanish", "esperanto", "french", "hindi", "icelandic", "italian", "latin", "hungarian",
+            "dutch", "norwegian", "polish", "portuguese", "romanian", "albanian", "russian", "slovak",
+            "serbian", "finnish", "swedish", "tagalog", "vietnamese", "turkish", "greek", "bulgarian",
+            "mongolian", "russian", "ukrainian", "hebrew", "arabic", "persian", "korean", "thai", "chinese",
             "japanese"
         ]
         for language in languages:
             Tag.objects.update_or_insert(language, "language")
 
     def get_tags(self):
-        MALE_PREFIX = 9792
-        FEMALE_PREFIX = 9794
-
+        global tag_queue
         tag_expression = r'\/tag.+.html">\n\s+(.+)\n'
         r = None
 
-        for i in range(96, 123):
+        self.stdout.write(f"Thread {threading.get_ident()}: Taking tags...")
+
+        i = "idle"
+
+        while tag_queue:
+            locker.acquire()
+            i = tag_queue.pop(0)
+            locker.release()
+            self.stdout.write(self.style.SUCCESS(f"Thread {threading.get_ident()}: Taking {chr(i)} part of tags..."))
             for _ in range(3):
                 try:
                     if i == 96:
@@ -106,10 +88,9 @@ class Command(BaseCommand):
             if not r:
                 self.stdout.write(self.style.ERROR(f"Finally failed to connect to hitomi.la"))
                 return
-            content = bs(r.content).prettify()
+            content = bs(r.content, "html.parser").prettify()
             tags = re.findall(tag_expression, content)
             for tag in tags:
-                self.stdout.write(self.style.SUCCESS(f"Tag: {tag}"))
                 if len(tag.split(' ')[-1]) != 1:  # no gender tag
                     tag_name = tag
                     tag_type = "tag"
@@ -119,15 +100,23 @@ class Command(BaseCommand):
                 else:
                     tag_name = tag[:-1]
                     tag_type = "female"
-                self.stdout.write(self.style.SUCCESS(f"Tag Name: {tag_name}"))
-                self.stdout.write(self.style.SUCCESS(f"Tag Type: {tag_type}"))
                 Tag.objects.update_or_insert(tag_name, tag_type)
 
+        self.stdout.write(f"Thread {threading.get_ident()}: Done artists thread with job {i}")
+
     def get_artists(self):
+        global artists_queue
         artist_expression = r'\/artist.+.html">\n\s+(.+)\n'
         r = None
+        self.stdout.write(f"Thread {threading.get_ident()}: Taking artists...")
 
-        for i in range(96, 123):
+        i = "idle"
+
+        while artists_queue:
+            locker.acquire()
+            i = artists_queue.pop(0)
+            locker.release()
+            self.stdout.write(self.style.SUCCESS(f"Thread {threading.get_ident()}: Taking {chr(i)} part of artists..."))
             for _ in range(3):
                 try:
                     if i == 96:
@@ -142,17 +131,27 @@ class Command(BaseCommand):
             if not r:
                 self.stdout.write(self.style.ERROR(f"Finally failed to connect to hitomi.la"))
                 return
-            content = bs(r.content).prettify()
+            content = bs(r.content, "html.parser").prettify()
             artists = re.findall(artist_expression, content)
             for artist in artists:
-                self.stdout.write(self.style.SUCCESS(f"Artist: {artist}"))
                 Tag.objects.update_or_insert(artist, "artist")
 
+        self.stdout.write(f"Thread {threading.get_ident()}: Done artists thread with job {i}")
+
     def get_series(self):
+        global series_queue
         series_expression = r'\/series.+.html">\n\s+(.+)\n'
         r = None
 
-        for i in range(96, 123):
+        self.stdout.write(f"Thread {threading.get_ident()}: Taking series...")
+
+        i = "idle"
+
+        while series_queue:
+            locker.acquire()
+            i = series_queue.pop(0)
+            locker.release()
+            self.stdout.write(self.style.SUCCESS(f"Thread {threading.get_ident()}: Taking {chr(i)} part of series..."))
             for _ in range(3):
                 try:
                     if i == 96:
@@ -167,17 +166,27 @@ class Command(BaseCommand):
             if not r:
                 self.stdout.write(self.style.ERROR(f"Finally failed to connect to hitomi.la"))
                 return
-            content = bs(r.content).prettify()
+            content = bs(r.content, "html.parser").prettify()
             serieses = re.findall(series_expression, content)
             for series in serieses:
-                self.stdout.write(self.style.SUCCESS(f"Series: {series}"))
                 Tag.objects.update_or_insert(series, "series")
 
+        self.stdout.write(f"Thread {threading.get_ident()}: Done series thread with job {i}")
+
     def get_characters(self):
+        global characters_queue
         character_expression = r'\/character.+.html">\n\s+(.+)\n'
         r = None
 
-        for i in range(96, 123):
+        self.stdout.write(f"Thread {threading.get_ident()}: Taking characters...")
+
+        i = 'idle'
+
+        while characters_queue:
+            locker.acquire()
+            i = characters_queue.pop(0)
+            locker.release()
+            self.stdout.write(self.style.SUCCESS(f"Thread {threading.get_ident()}: Taking {chr(i)} part of characters..."))
             for _ in range(3):
                 try:
                     if i == 96:
@@ -192,8 +201,8 @@ class Command(BaseCommand):
             if not r:
                 self.stdout.write(self.style.ERROR(f"Finally failed to connect to hitomi.la"))
                 return
-            content = bs(r.content).prettify()
+            content = bs(r.content, "html.parser").prettify()
             characters = re.findall(character_expression, content)
             for character in characters:
-                self.stdout.write(self.style.SUCCESS(f"Characters: {character}"))
                 Tag.objects.update_or_insert(character, "character")
+        self.stdout.write(f"Thread {threading.get_ident()}: Done characters thread with job {i}")
