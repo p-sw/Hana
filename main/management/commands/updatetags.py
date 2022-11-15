@@ -92,7 +92,6 @@ class Command(BaseCommand):
                         self.stdout.write(self.style.WARNING(f"Retrying..."))
                         continue
 
-
     def get_tags(self):
         global tag_queue
         tag_expression = r'\/tag.+.html">\n\s+(.+)\n\s+</a>\n\s+(\(\d+\))'
