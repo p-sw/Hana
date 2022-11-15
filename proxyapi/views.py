@@ -132,16 +132,26 @@ def get_recommendation_tag(request):
         if name_query:
             filter_kwargs["name__"+name_filter] = name_query
         if excludes:
-            return Tag.objects.exclude(id__in=excludes).filter(**filter_kwargs).values_list('id', 'tagtype', 'name')
+            return Tag.objects.exclude(
+                id__in=excludes
+            ).filter(**filter_kwargs).order_by('-gallery_count').values_list('id', 'tagtype', 'name', "gallery_count")
         else:
-            return Tag.objects.filter(**filter_kwargs).values_list('id', 'tagtype', 'name')
+            return Tag.objects.filter(**filter_kwargs).order_by('-gallery_count').values_list(
+                'id',
+                'tagtype',
+                'name',
+                "gallery_count"
+            )
 
     def suggest_trys(trys):
         totals = []
         for try_dict in trys:
+            try_dict["excludes"] += totals
             res = get_tags(**try_dict)
-            if len(res) == 5:
+            if len(res) == search_result_limit and len(totals) == 0:
                 return res
+            elif len(totals+list(res)) >= search_result_limit:
+                return totals+list(res)
             else:
                 totals += res
                 continue
@@ -149,14 +159,28 @@ def get_recommendation_tag(request):
 
     result = suggest_trys([
         {
-            "type_query": query_type,
+            "type_query": query_type if query_type else "female",
             "type_filter": "startswith",
             "name_query": current_name,
             "name_filter": "startswith",
             "excludes": ban_ids
         },
         {
-            "type_query": query_type,
+            "type_query": query_type if query_type else "male",
+            "type_filter": "startswith",
+            "name_query": current_name,
+            "name_filter": "startswith",
+            "excludes": ban_ids
+        },
+        {
+            "type_query": query_type if query_type else "female",
+            "type_filter": "startswith",
+            "name_query": current_name,
+            "name_filter": "in",
+            "excludes": ban_ids
+        },
+        {
+            "type_query": query_type if query_type else "male",
             "type_filter": "startswith",
             "name_query": current_name,
             "name_filter": "in",
@@ -164,4 +188,6 @@ def get_recommendation_tag(request):
         }
     ])[:search_result_limit]
 
-    return JsonResponse({tag_id: f"{tag_type}:{tag_name}" for tag_id, tag_type, tag_name in result})
+    return JsonResponse(
+        {tag_id: f"{tag_type}:{tag_name} ({gallery_count})" for tag_id, tag_type, tag_name, gallery_count in result}
+    )
