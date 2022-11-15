@@ -12,7 +12,7 @@ from requests.exceptions import ConnectionError
 from requests.exceptions import ConnectTimeout
 from urllib3.exceptions import ProtocolError
 
-MALE_PREFIX = 9792
+MALE_PREFIX = 9794
 
 tag_queue = list(range(96, 123))
 artists_queue = list(range(96, 123))
@@ -91,8 +91,6 @@ class Command(BaseCommand):
                         self.stdout.write(self.style.WARNING(f"Failed to connect to hitomi.la"))
                         self.stdout.write(self.style.WARNING(f"Retrying..."))
                         continue
-
-
 
 
     def get_tags(self):
