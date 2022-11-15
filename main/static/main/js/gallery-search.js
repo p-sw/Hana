@@ -195,6 +195,17 @@ class GalleryBlock {
                 // remove 2nd, 3rd image
                 block.querySelector("div a.lillie div[class*=-img-cont] div[class*=-img2]").remove()
                 block.querySelector("div a.lillie div[class*=-img-cont] div[class*=-img-back]").remove()
+                // set a link to viewer (a.lillie, h1.lillie a)
+                block.querySelector("div a.lillie").href = `/view/${id}`;
+                block.querySelector("div h1.lillie a").href = `/view/${id}`;
+                for (let as of block.querySelectorAll("div[class$=-content] a")) {
+                    as.href = '';
+                } /* IMPORTANT: TEMPORARY BLANKED, PROCESS IT LATER */
+                // set a link to artists (div.artist-list a)
+                const artists = block.querySelectorAll("div.artist-list a");
+                for (let artist of artists) {
+                    artist.href = `/app/search?tags=artist:${artist.innerText}`;
+                }
                 // set thumbnail
                 let src = block.querySelector("div a.lillie div[class*=-img-cont] picture source");
                 let img = block.querySelector("div a.lillie div[class*=-img-cont] picture img");
