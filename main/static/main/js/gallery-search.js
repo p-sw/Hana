@@ -1,3 +1,13 @@
+function loadErrorHandler(e) {
+    setTimeout(() => {
+        if (/&t=/.test(e.target.src)) {
+            e.target.src = e.target.src.replace(/&t=\d+/, `&t=${Date.now()}`);
+        } else {
+            e.target.src = e.target.src + "&t=" + Date.now();
+        }
+    }, 1500);
+}
+
 class PageNavigator {
     constructor(pages) {
         this.max_page = pages
@@ -191,10 +201,12 @@ class GalleryBlock {
                 if (src) {
                     src.src = "/api/get-image?url=https:"+/(\S+)\s1x/.exec(src.dataset.srcset)[1];
                     src.classList.add("lazyload");
+                    src.addEventListener("error", loadErrorHandler);
                 }
                 if (img) {
                     img.src = "/api/get-image?url=https:"+img.dataset.src;
                     img.classList.add("lazyload");
+                    img.addEventListener("error", loadErrorHandler);
                 }
                 // add column container, add all thing except image container
                 let col = document.createElement("div");
