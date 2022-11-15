@@ -62,7 +62,7 @@ class Command(BaseCommand):
         if t.lower() == "all" or t.lower() == "languages":
             self.stdout.write(self.style.WARNING("Adding language tags..."))
             languages = [
-                "indonessian", "javanese", "catalan", "cebuano", "czech", "danish", "german", "estonian",
+                "indonesian", "javanese", "catalan", "cebuano", "czech", "danish", "german", "estonian",
                 "english", "spanish", "esperanto", "french", "hindi", "icelandic", "italian", "latin", "hungarian",
                 "dutch", "norwegian", "polish", "portuguese", "romanian", "albanian", "russian", "slovak",
                 "serbian", "finnish", "swedish", "tagalog", "vietnamese", "turkish", "greek", "bulgarian",
@@ -78,11 +78,14 @@ class Command(BaseCommand):
                             "origin": "https://hitomi.la",
                             "referer": "https://hitomi.la/"
                         })
-                        if res.status_code == 200:
+                        self.stdout.write(f"Request: https://ltn.hitomi.la/n/index-{language}.nozomi")
+                        if res.status_code in [200, 206]:
                             success = True
                             counts = len(res.content) // 4
+                            self.stdout.write(f"Adding language:{language}, {counts} galleries")
                             Tag.objects.update_or_insert(name=language, tagtype="language", gallery_count=counts)
                         else:
+                            self.stdout.write(f"Got unknown status code: {res.status_code}. Retrying..")
                             time.sleep(1)
                     except (ConnectionError, ConnectTimeout, ProtocolError):
                         self.stdout.write(self.style.WARNING(f"Failed to connect to hitomi.la"))
