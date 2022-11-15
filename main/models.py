@@ -2,10 +2,10 @@ from django.db import models
 
 
 class TagManager(models.Manager):
-    def update_or_insert(self, name, tagtype):
-        tag = self.filter(name=name, tagtype=tagtype).first()
+    def update_or_insert(self, **kwargs):
+        tag = self.filter(**kwargs).first()
         if not tag:
-            tag = self.create(name=name, tagtype=tagtype)
+            tag = self.create(**kwargs)
         return tag
 
 

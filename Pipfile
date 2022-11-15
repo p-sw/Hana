@@ -14,6 +14,7 @@ django-compressor = "*"
 django-sass-processor = "*"
 hypercorn = "*"
 django-crontab = "*"
+jupyter = "*"
 
 [dev-packages]
 

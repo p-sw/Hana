@@ -73,7 +73,7 @@ class Command(BaseCommand):
 
     def get_tags(self):
         global tag_queue
-        tag_expression = r'\/tag.+.html">\n\s+(.+)\n'
+        tag_expression = r'\/tag.+.html">\n\s+(.+)\n\s+</a>\n\s+(\(\d+\))'
         r = None
 
         self.stdout.write(f"Thread {threading.get_ident()}: Taking tags...")
@@ -100,8 +100,9 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.ERROR(f"Finally failed to connect to hitomi.la"))
                 return
             content = bs(r.content, "html.parser").prettify()
-            tags = re.findall(tag_expression, content)
-            for tag in tags:
+            m = re.findall(tag_expression, content)
+            tags = [i[1] for i in m]
+            for index, tag in enumerate(tags):
                 if len(tag.split(' ')[-1]) != 1:  # no gender tag
                     tag_name = tag
                     tag_type = "tag"
@@ -111,7 +112,8 @@ class Command(BaseCommand):
                 else:
                     tag_name = tag[:-1]
                     tag_type = "female"
-                Tag.objects.update_or_insert(tag_name, tag_type)
+                tag_count = int(re.compile(r"\((\d+)\)").match(m[index][0]).group(1))
+                Tag.objects.update_or_insert(name=tag_name, tagtype=tag_type, gallery_count=tag_count)
 
         self.stdout.write(f"Thread {threading.get_ident()}: Done artists thread with job {i}")
 
