@@ -119,6 +119,8 @@ def get_recommendation_tag(request):
     query_type = POST.get("type") or ""
     ban_ids = POST.get("ban") or []
 
+    search_result_limit = 8
+
     def get_tags(type_query: str, type_filter: str, name_query: str, name_filter: str, excludes: list = None):
         filter_kwargs = {}
         if type_query:
@@ -126,9 +128,9 @@ def get_recommendation_tag(request):
         if name_query:
             filter_kwargs["name__"+name_filter] = name_query
         if excludes:
-            return Tag.objects.exclude(id__in=excludes).filter(**filter_kwargs).values_list('id', 'tagtype', 'name')[:5]
+            return Tag.objects.exclude(id__in=excludes).filter(**filter_kwargs).values_list('id', 'tagtype', 'name')
         else:
-            return Tag.objects.filter(**filter_kwargs).values_list('id', 'tagtype', 'name')[:5]
+            return Tag.objects.filter(**filter_kwargs).values_list('id', 'tagtype', 'name')
 
     def suggest_trys(trys):
         totals = []
@@ -156,6 +158,6 @@ def get_recommendation_tag(request):
             "name_filter": "in",
             "excludes": ban_ids
         }
-    ])
+    ])[:search_result_limit]
 
     return JsonResponse({tag_id: f"{tag_type}:{tag_name}" for tag_id, tag_type, tag_name in result})
