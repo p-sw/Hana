@@ -9,7 +9,11 @@ main {
   margin-top: 100px;
 }
 
-section {
+section#gallery {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
   article.gallery-block {
     display: block;
 
