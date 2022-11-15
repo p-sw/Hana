@@ -28,11 +28,23 @@ section#gallery article.gallery-block div {
   height: 100%;
   overflow: hidden;
 }
+@media (max-width: 600px) {
+  section#gallery article.gallery-block div {
+    flex-direction: column;
+  }
+}
 section#gallery article.gallery-block div div.col {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 70%;
   height: 100%;
+  margin-left: 20px;
+}
+@media (max-width: 600px) {
+  section#gallery article.gallery-block div div.col {
+    width: 100%;
+    margin-left: 0;
+  }
 }
 section#gallery article.gallery-block div a.lillie {
   display: table-cell;
@@ -40,11 +52,13 @@ section#gallery article.gallery-block div a.lillie {
   height: 100%;
   background-color: #000;
 }
+@media (max-width: 600px) {
+  section#gallery article.gallery-block div a.lillie {
+    width: 50%;
+  }
+}
 section#gallery article.gallery-block div a.lillie div, section#gallery article.gallery-block div a.lillie picture {
   margin-left: 0;
-}
-section#gallery article.gallery-block div > :not(a.lillie) {
-  margin-left: 20px;
 }
 section#gallery article.gallery-block div h1.lillie {
   font-family: "Pretendard", sans-serif;
