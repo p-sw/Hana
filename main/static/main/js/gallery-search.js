@@ -120,7 +120,7 @@ class GalleryBlock {
             area = "tag";
             tag_r = tag;
         } else if (ns === "language") {
-            area = undefined;
+            area = '';
             language = tag_r;
             tag_r = 'index';
         }
