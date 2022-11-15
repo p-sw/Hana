@@ -146,6 +146,10 @@ section.toolbar div.searchbar div.searchbar-container div.searchbar-input div.ta
   border-radius: 5px;
   padding: 3px 5px;
   margin: 0 3px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 section.toolbar div.searchbar div.searchbar-container div.searchbar-input div.tags div.item button {
   background-color: transparent;
@@ -158,7 +162,51 @@ section.toolbar div.searchbar div.searchbar-container div.searchbar-input div.ta
 section.toolbar div.searchbar div.searchbar-container div.searchbar-input div.tags div.item button:hover {
   color: #cfcfcf;
 }
-section.toolbar div.searchbar div.searchbar-container div.searchbar-input input {
+section.toolbar div.searchbar div.searchbar-container div.searchbar-input div.tags div.item div.select {
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: "Pretendard", sans-serif;
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+}
+section.toolbar div.searchbar div.searchbar-container div.searchbar-input div.tags div.item div.select:hover {
+  color: #cfcfcf;
+}
+section.toolbar div.searchbar div.searchbar-container div.searchbar-input div.tags div.item div.select label {
+  border-radius: 5px;
+  padding: 2px;
+  margin-right: 3px;
+  transition: 0.1s;
+}
+section.toolbar div.searchbar div.searchbar-container div.searchbar-input div.tags div.item div.select label:hover {
+  background-color: #3f3f3f;
+  transition: 0.1s;
+}
+section.toolbar div.searchbar div.searchbar-container div.searchbar-input div.tags div.item div.select label:has(:checked) {
+  background-color: #5a5a5a;
+  transition: 0.1s;
+}
+section.toolbar div.searchbar div.searchbar-container div.searchbar-input div.tags div.item div.select label input {
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: "Pretendard", sans-serif;
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  width: 0;
+  height: 0;
+}
+section.toolbar div.searchbar div.searchbar-container div.searchbar-input div.tags div.item div.select label input:hover {
+  color: #cfcfcf;
+}
+section.toolbar div.searchbar div.searchbar-container div.searchbar-input input.main-input {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -170,13 +218,13 @@ section.toolbar div.searchbar div.searchbar-container div.searchbar-input input 
   border-radius: 5px;
   background-color: #fff;
 }
-section.toolbar div.searchbar div.searchbar-container div.searchbar-input input::placeholder {
+section.toolbar div.searchbar div.searchbar-container div.searchbar-input input.main-input::placeholder {
   font-family: "Pretendard", sans-serif;
   font-size: 16px;
   font-weight: 600;
   color: rgba(0, 0, 0, 0.3137254902);
 }
-section.toolbar div.searchbar div.searchbar-container div.searchbar-input input:focus {
+section.toolbar div.searchbar div.searchbar-container div.searchbar-input input.main-input:focus {
   outline: none;
 }
 section.toolbar div.searchbar div.searchbar-container div.searchbar-input:has(:focus) + div.suggests {

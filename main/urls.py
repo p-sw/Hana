@@ -7,4 +7,5 @@ from . import views
 
 urlpatterns = [
     path('', login_required(views.IndexView.as_view()), name='index'),
+    path('search', login_required(views.SearchView.as_view()), name='search'),
 ]

@@ -37,18 +37,34 @@ def image_proxy(request):
 
 
 def nozomi_proxy(request):
-    res = requests.get("https://ltn.hitomi.la/index-all.nozomi", headers={
+    area = request.GET.get('area', '')
+    compressed = request.GET.get('comp_prefix', '')
+    tag = request.GET.get('tag', 'index')
+    language = request.GET.get('language', 'all')
+    start_byte = request.GET.get('start', '')
+    end_byte = request.GET.get('end', '')
+
+    request_url = "https://ltn.hitomi.la/"
+    if compressed:
+        request_url += f"{compressed}/"
+    if area:
+        request_url += f"{area}/"
+    request_url += f"{tag}-{language}.nozomi"
+
+    req_header = {
         "Content-Type": "arraybuffer",
-        "Range": f"bytes={request.GET.get('start')}-{request.GET.get('end')}"
-    })
+        "origin": "https://hitomi.la/",
+        "Referer": "https://hitomi.la/"
+    }
+    if start_byte and end_byte:
+        req_header['Range'] = f"bytes={start_byte}-{end_byte}"
+
+    res = requests.get(request_url, headers=req_header)
 
     if res.status_code in [200, 206]:
-        headers = {
-            "Content-Type": "arraybuffer",
-            "Content-Range": res.headers['Content-Range'],
-            "Content-Length": res.headers['Content-Length'],
-        }
-        return HttpResponse(res.content, headers=headers, status=res.status_code)
+        return_header = res.headers
+        del return_header["Connection"]
+        return HttpResponse(res.content, headers=return_header, status=res.status_code)
     else:
         return HttpResponse(status=res.status_code)
 

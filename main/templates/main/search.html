@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        {% include 'general/macro/head.html' %}
+        <title>App</title>
+        <link rel="stylesheet" href="{% static 'main/css/galleryblock.css' %}">
+    </head>
+    <body>
+        {% include 'main/macro/toolbar.html' %}
+        <main>
+            <header>
+                <h1><span id="result-length"></span>개를 찾았습니다.</h1>
+            </header>
+            <section id="gallery"></section>
+        </main>
+        <script src="{% static 'main/js/gallery-search.js' %}"></script>
+    </body>
+</html>

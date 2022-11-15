@@ -43,6 +43,9 @@ class QueryArea {
         this.tag_container = this.toolbar.querySelector('div.searchbar-input div.tags');
         this.queryArea = this.toolbar.querySelector("input");
         this.queryArea.addEventListener('input', this.input.bind(this));
+
+        this.searchButton = this.toolbar.querySelector("div.searchbar button.search");
+        this.searchButton.addEventListener('click', this.search.bind(this));
     }
 
     input() {
@@ -71,7 +74,12 @@ class QueryArea {
                         let ti = document.createElement("div");
                         ti.classList.add("item");
                         ti.dataset.id = tag_id;
-                        ti.innerText = e.target.innerText;
+                        ti.dataset.tag = data[tag_id].replace(" ", "_");
+
+                        let signSelector = document.createElement("div");
+                        signSelector.classList.add("select")
+                        signSelector.innerHTML = `<label><input type="radio" name="sign" value="+" checked>+</label>
+                                                  <label><input type="radio" name="sign" value="-">-</label>`;
 
                         let close = document.createElement("button");
                         close.innerText = "x";
@@ -79,6 +87,12 @@ class QueryArea {
                             e.target.parentElement.remove();
                         }
 
+                        let innerText = document.createElement("span");
+                        innerText.innerText = data[tag_id];
+
+                        // layout inner tag element
+                        ti.appendChild(signSelector);
+                        ti.appendChild(innerText);
                         ti.appendChild(close);
 
                         this.queryArea.value = "";
@@ -89,6 +103,16 @@ class QueryArea {
                 }
             })
         }
+    }
 
+    search() {
+        let query = "";
+        let appendedTags = this.tag_container.children;
+        if (appendedTags.length > 0) {
+            for (let i = 0; i < appendedTags.length; i++) {
+                query += appendedTags[i].querySelector("input:checked").value+appendedTags[i].dataset.tag;
+            }
+            window.location.href = `/app/search?tags=${query}`;
+        }
     }
 }
