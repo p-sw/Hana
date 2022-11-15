@@ -115,9 +115,4 @@ CONSTANCE_CONFIG_FIELDSETS = {
     'MAIL USER': ('MAIL_USERNAME', 'MAIL_PASSWORD')
 }
 
-LOGIN_URL = 'front:index'  # 'user:login'
-
-CRONJOBS = [
-    # hourly
-    ('0 * * * *', 'main.cron.update_gallery', '>> ' + str(BASE_DIR / 'gallery.log')),
-]
+LOGIN_URL = 'user:login'
