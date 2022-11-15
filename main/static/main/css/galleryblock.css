@@ -12,6 +12,15 @@ section#gallery {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+}
+section#gallery img#loading-content {
+  width: 50%;
+}
+@media (max-width: 600px) {
+  section#gallery img#loading-content {
+    width: 100%;
+  }
 }
 section#gallery article.gallery-block {
   display: block;
