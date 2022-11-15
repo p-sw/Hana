@@ -41,20 +41,20 @@ class Command(BaseCommand):
         id_index += 1
         locker.release()
         print(f"Working on {tag.tagtype}:{tag.name}")
-        url = f"https://ltn.hitomi.la/n"
+        url = f"https://ltn.hitomi.la/n/"
         area = tag.tagtype
         language = "all"
         tag_r = tag.name
 
         if tag.tagtype == "female" or tag.tagtype == "male":
-            area = "tag"
+            area = "tag/"
             tag_r = f"{tag.tagtype}:{tag.name}"
         elif tag.tagtype == "language":
             area = ""
             language = tag.name
             tag_r = "index"
 
-        url = f"{url}/{area}/{tag_r.rstrip(' ')}-{language}.nozomi"
+        url = f"{url}{area}{tag_r.rstrip(' ')}-{language}.nozomi"
         print(f"Final request URL: {url}")
         headers = {
             "Content-Type": "arraybuffer",
