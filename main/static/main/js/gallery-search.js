@@ -86,13 +86,13 @@ class GalleryBlock {
         }).then(buffer => {
             return new DataView(buffer);
         }).then(view => {
-            const total_galleries = view.byteLength / 4;
+            this.total_galleries = view.byteLength / 4;
 
-            let page_navigator = new PageNavigator(Math.ceil(total_galleries / this.galleries_per_page));
+            let page_navigator = new PageNavigator(Math.ceil(this.total_galleries / this.galleries_per_page));
             page_navigator.build();
 
             const results = [];
-            for (let i = (this.page - 1) * this.galleries_per_page; i < Math.min( this.page * this.galleries_per_page, total_galleries); i++) {
+            for (let i = (this.page - 1) * this.galleries_per_page; i < Math.min( this.page * this.galleries_per_page, this.total_galleries); i++) {
                 results.push(view.getInt32(i*4, false));
             }
             return results;
@@ -163,7 +163,7 @@ class GalleryBlock {
         }).then((data) => {
             // final
             let result_length_element = document.querySelector("#result-length");
-            result_length_element.innerText = data.length;
+            result_length_element.innerText = this.total_galleries;
             result_length_element.parentElement.parentElement.removeAttribute("style");
             this.put(data);
         })
