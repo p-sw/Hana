@@ -37,7 +37,7 @@ class QueryArea {
         this.suggestor = this.toolbar.querySelector('div.searchbar-container div.suggests');
 
         this.toolbar.querySelector("div.searchbar-container").addEventListener("click", e => {
-            document.querySelector(".toolbar div.searchbar-input input").focus();
+            document.querySelector(".toolbar div.searchbar-input input.main-input").focus();
         })
 
         this.tag_container = this.toolbar.querySelector('div.searchbar-input div.tags');
@@ -78,8 +78,8 @@ class QueryArea {
 
                         let signSelector = document.createElement("div");
                         signSelector.classList.add("select")
-                        signSelector.innerHTML = `<label><input type="radio" name="sign" value="+" checked>+</label>
-                                                  <label><input type="radio" name="sign" value="-">-</label>`;
+                        signSelector.innerHTML = `<label><input type="radio" name="${tag_id}" value="+" checked>+</label>
+                                                  <label><input type="radio" name="${tag_id}" value="-">-</label>`;
 
                         let close = document.createElement("button");
                         close.innerText = "x";
