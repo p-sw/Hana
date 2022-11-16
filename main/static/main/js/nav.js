@@ -1,3 +1,13 @@
+buttonFunctions = {
+    "favorite": function(e) {
+        window.location.href = "/app/favorites";
+    },
+
+    "settings": function(e) {
+        window.location.href = "/app/settings";
+    }
+}
+
 class Nav {
     constructor() {
         this.toolbar = document.querySelector('.toolbar');

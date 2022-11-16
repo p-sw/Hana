@@ -1,5 +1,7 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css");
 
+$toolbar-element-length: 2;
+
 section.toolbar {
   display: flex;
   flex-direction: row;
@@ -112,12 +114,14 @@ section.toolbar {
       justify-content: flex-start;
       align-items: center;
 
+      gap: 10px;
+
       button {
         width: 40px;
         height: 40px;
       }
 
-      @for $i from 1 through 1 {
+      @for $i from 1 through $toolbar-element-length {
         button:not(.visible) {
           transform: scale(0);
 

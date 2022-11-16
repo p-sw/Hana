@@ -90,6 +90,7 @@ section.toolbar nav div.content {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  gap: 10px;
 }
 section.toolbar nav div.content button {
   width: 40px;
@@ -102,6 +103,14 @@ section.toolbar nav div.content button:not(.visible) {
 section.toolbar nav div.content button.visible:nth-child(1) {
   transform: scale(1);
   transition: 0.2s ease-in-out 0.1s;
+}
+section.toolbar nav div.content button:not(.visible) {
+  transform: scale(0);
+  transition: 0.2s ease-in-out 0.1s;
+}
+section.toolbar nav div.content button.visible:nth-child(2) {
+  transform: scale(1);
+  transition: 0.2s ease-in-out 0.2s;
 }
 section.toolbar div.searchbar {
   display: flex;

@@ -3,15 +3,18 @@
 <section class="toolbar">
     <nav class="navigation">
         <div class="control">
-            <button class="nav-opener" data-label="Menu">
+            <button class="nav-opener" data-label="메뉴">
                 <img src="{% static 'main/image/menu.svg' %}" alt="menu">
             </button>
-            <button class="nav-closer disabled" data-label="Close">
+            <button class="nav-closer disabled" data-label="닫기">
                 <img src="{% static 'main/image/close.svg' %}" alt="close">
             </button>
         </div>
         <div class="content">
-            <button class="settings" data-label="Settings" data-order="0">
+            <button class="favorite" data-label="즐겨찾기" data-order="0">
+                <img src="{% static 'viewer/image/star_select.svg' %}" alt="favorite">
+            </button>
+            <button class="settings" data-label="설정" data-order="1">
                 <img src="{% static 'main/image/setting.svg' %}" alt="settings">
             </button>
         </div>
