@@ -75,8 +75,6 @@ def nozomi_proxy(request):
             fail = False
         except (requests.exceptions.ConnectionError, urllib3.exceptions.ConnectionError, requests.exceptions.ConnectTimeout):
             continue
-    if not res:
-        return HttpResponse(status=500)
 
     if res.status_code in [200, 206]:
         # repack
