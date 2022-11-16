@@ -1,7 +1,8 @@
 class StarManager {
-    constructor() {
+    constructor(galleryid) {
+        this.galleryid = galleryid;
         // get current favorite status
-        fetch('/api/favorite/get-favorite-by-id', {
+        fetch(`/api/favorite/get-favorite-by-id?id=${galleryid}`, {
             method: 'GET',
         }).then((response) => response.json()).then((data) => {
             this.isFavorite = data["exists"];
@@ -23,10 +24,15 @@ class StarManager {
     }
 
     toggleStar() {
-        // toggle using server api
-
-        this.isFavorite = !this.isFavorite;
-        this.updateStar();
+        fetch(`/api/favorite/toggle-favorite?id=${this.galleryid}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                galleryid: this.galleryid,
+            })
+        }).then((response) => response.json()).then((data) => {
+            this.isFavorite = data["exists"];
+            this.updateStar();
+        });
     }
 }
 
@@ -48,7 +54,7 @@ class Nav {
             window.location.href = "/";
         })
 
-        this.starManager = new StarManager();
+        this.starManager = new StarManager(galleryid);
         this.nav.querySelector("#star").addEventListener("click", this.starManager.toggleStar.bind(this.starManager));
     }
 

@@ -6,6 +6,7 @@ app_name = "proxy"
 
 FAVORITE_API = [
     path('favorite/get-favorite-by-id', views.get_favorite_by_gallery, name='get_favorite_by_id'),
+    path('favorite/toggle-favorite', views.toggle_favorite, name='toggle_favorite'),
 ]
 
 urlpatterns = [

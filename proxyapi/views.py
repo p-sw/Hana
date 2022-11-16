@@ -200,3 +200,22 @@ def get_favorite_by_gallery(request):
         return HttpResponse(status=403)
 
     return JsonResponse({"exists": Favorites.objects.filter(user_id=user_id, gallery_id=gallery_id).exists()})
+
+
+@csrf_exempt
+def toggle_favorite(request):
+    POST: dict = json.loads(request.body)
+    gallery_id = POST.get("galleryid")
+    user_id = request.user.id
+
+    if not user_id:
+        return HttpResponse(status=403)
+
+    obj = Favorites.objects.filter(user_id=user_id, gallery_id=gallery_id)
+
+    if obj.exists():
+        obj.delete()
+        return JsonResponse({"exists": False})
+    else:
+        Favorites.objects.create(user_id=user_id, gallery_id=gallery_id)
+        return JsonResponse({"exists": True})
