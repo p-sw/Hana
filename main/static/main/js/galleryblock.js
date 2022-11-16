@@ -166,7 +166,7 @@ class FavoriteObject {
     }
 
     entrypoint() {
-        this.caller.load().then((data) => {
+        this.load().then((data) => {
             let result_length_element = document.querySelector("#result-length");
             result_length_element.innerText = this.total_galleries;
             result_length_element.parentElement.parentElement.removeAttribute("style");
@@ -216,24 +216,21 @@ class GalleryBlock {
                 this.negatives = Array.prototype.map.call(
                     [...this.query_tags.matchAll(/-([a-z:_]+)/g)],
                     (m) => m[1].replace("_", " "));
-                this.processor = new SearchObject(this);
             } else {
                 window.location.href = '/';
             }
-        } else if (this.page_mode === "favorites") {
-            this.processor = new FavoriteObject(this);
         }
     }
 
     entrypoint() {
         if (this.page_mode === "search") {
-            this.processor.entrypoint();
+            new SearchObject(this).entrypoint();
         } else if (this.page_mode === "index") {
             this.load('').then((gallery_ids) => {
                 this.put(gallery_ids);
             });
         } else if (this.page_mode === "favorites") {
-            this.processor.entrypoint();
+            new FavoriteObject(this).entrypoint();
         }
     }
 
