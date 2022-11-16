@@ -94,20 +94,22 @@ class QueryArea {
                 body: JSON.stringify(body)
             }).then((response) => response.json()).then((data) => {
                 for (let tag_id in data) {
+                    let tag_full = `${data[tag_id]['type']}:${data[tag_id]['name']}`
                     let item = document.createElement("div");
                     item.classList.add("item");
-                    item.innerHTML = `<span>${data[tag_id]}</span>`;
+                    item.style.order = data[tag_id]['order'];
+                    item.innerHTML = `<span>${tag_full}</span>`;
                     item.dataset.id = tag_id;
                     item.onclick = (e) => {
                         let ti = document.createElement("div");
                         ti.classList.add("item");
                         ti.dataset.id = tag_id;
-                        ti.dataset.tag = data[tag_id].replace(" ", "_");
+                        ti.dataset.tag = tag_full.replace(" ", "_");
 
                         let signSelector = document.createElement("div");
                         signSelector.classList.add("select")
-                        signSelector.innerHTML = `<label><input type="radio" name="${tag_id}" value="+" checked>+</label>
-                                                  <label><input type="radio" name="${tag_id}" value="-">-</label>`;
+                        signSelector.innerHTML = `<label><input type="radio" name="${tag_full}" value="+" checked>+</label>
+                                                  <label><input type="radio" name="${tag_full}" value="-">-</label>`;
 
                         let close = document.createElement("button");
                         close.innerText = "x";
@@ -116,7 +118,7 @@ class QueryArea {
                         }
 
                         let innerText = document.createElement("span");
-                        innerText.innerText = data[tag_id];
+                        innerText.innerText = tag_full;
 
                         // layout inner tag element
                         ti.appendChild(signSelector);

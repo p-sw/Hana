@@ -202,7 +202,7 @@ def get_recommendation_tag(request):
     ])[:search_result_limit]
 
     return JsonResponse(
-        {tag_id: f"{tag_type}:{tag_name}" for tag_id, tag_type, tag_name in result}
+        {tag_id: {"type": tag_type, "name": tag_name, "order": order} for order, (tag_id, tag_type, tag_name) in enumerate(result)}
     )
 
 
