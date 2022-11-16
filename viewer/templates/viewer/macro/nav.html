@@ -1,6 +1,20 @@
 {% load static %}
 <nav>
-    <img src="{% static 'viewer/image/back.svg' %}" alt="Go Back">
+    <div class="controls">
+        {% static 'main/image/menu.svg' as menu %}
+        {% static 'main/image/close.svg' as close %}
+        {% static 'viewer/image/back.svg' as back %}
+        {% static 'viewer/image/home.svg' as home %}
+        {% static 'viewer/image/star.svg' as star %}
+        {% static 'viewer/image/star_select.svg' as star_select %}
+        {% include 'viewer/macro/button.html' with id="menu-open" src=menu alt="메뉴" %}
+        {% include 'viewer/macro/button.html' with id="menu-close" src=close alt="닫기" style="display: none;" %}
+        <div id="main-menu" class="closed">
+            {% include 'viewer/macro/button.html' with id='back' src=back alt="뒤로 가기" %}
+            {% include 'viewer/macro/button.html' with id="home" src=home alt="홈으로 가기" %}
+            {% include 'viewer/macro/button.html' with id="star" src=star alt="즐겨찾기" altsrc=star_select %}
+        </div>
+    </div>
     <h1></h1>
 </nav>
 <script src="{% static 'viewer/js/nav.js' %}"></script>

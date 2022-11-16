@@ -8,22 +8,67 @@ nav {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   padding: 5px 10px;
-  background-color: #3f3f3f;
-  position: -webkit-sticky;
-  position: sticky;
+  width: 100%;
+  background-color: transparent;
+  position: fixed;
   top: 0;
 }
-nav * {
+nav h1 {
   background-color: #eaeaea;
   border-radius: 8px;
   padding: 5px 8px;
 }
-nav img {
+nav div.controls {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  width: fit-content;
+  height: fit-content;
+  gap: 5px;
+}
+nav div.controls div#main-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  width: fit-content;
+  height: fit-content;
+  position: relative;
+  gap: 5px;
+}
+nav div.controls div#main-menu.closed {
+  left: -100px;
+  transition: left 0.2s ease-in-out;
+}
+nav div.controls div#main-menu.opened {
+  left: 0;
+  transition: left 0.2s ease-in-out;
+}
+nav div.controls button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: relative;
   width: 50px;
   height: 50px;
-  float: left;
+  padding: 4px;
+  border: 1px solid #3f3f3f;
+  border-radius: 50%;
+  box-shadow: 0 0 5px #3f3f3f;
+  cursor: pointer;
+  transition: 0.2s;
+}
+nav div.controls button:hover {
+  background-color: #cccccc;
+  transition: background-color 0.2s;
+}
+nav div.controls button img {
+  width: 30px;
+  height: 30px;
 }
 nav h1 {
   font-family: "Pretendard", sans-serif;
