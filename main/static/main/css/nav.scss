@@ -176,7 +176,10 @@ section.toolbar {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
+
+      border: 1px solid #505050;
+      border-radius: 5px;
 
       max-width: 90%;
 
@@ -190,9 +193,6 @@ section.toolbar {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-
-        border: 1px solid #00000050;
-        border-radius: 5px;
 
         padding: 0 10px;
 
@@ -365,11 +365,6 @@ section.toolbar {
 
           &.selected {
             background-color: #cfcfcf;
-          }
-
-          &:last-child {
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
           }
 
           span {

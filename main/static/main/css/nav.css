@@ -142,7 +142,9 @@ section.toolbar div.searchbar div.searchbar-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  border: 1px solid #505050;
+  border-radius: 5px;
   max-width: 90%;
   background-color: #ffffff;
 }
@@ -155,8 +157,6 @@ section.toolbar div.searchbar div.searchbar-container div.searchbar-input {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  border: 1px solid rgba(0, 0, 0, 0.3137254902);
-  border-radius: 5px;
   padding: 0 10px;
 }
 section.toolbar div.searchbar div.searchbar-container div.searchbar-input div.tags {
@@ -290,10 +290,6 @@ section.toolbar div.searchbar div.searchbar-container div.suggests div.item:hove
 }
 section.toolbar div.searchbar div.searchbar-container div.suggests div.item.selected {
   background-color: #cfcfcf;
-}
-section.toolbar div.searchbar div.searchbar-container div.suggests div.item:last-child {
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
 }
 section.toolbar div.searchbar div.searchbar-container div.suggests div.item span {
   font-family: "Pretendard", sans-serif;
