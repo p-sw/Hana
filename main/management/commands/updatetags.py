@@ -13,6 +13,7 @@ from requests.exceptions import ConnectTimeout
 from urllib3.exceptions import ProtocolError
 
 MALE_PREFIX = 9794
+FEMALE_PREFIX = 9792
 
 tag_queue = list(range(96, 123))
 artists_queue = list(range(96, 123))
@@ -129,18 +130,19 @@ class Command(BaseCommand):
                 return
             content = bs(r.content, "html.parser").prettify()
             m = re.findall(tag_expression, content)
-            tags = [i[0] for i in m]
-            for index, tag in enumerate(tags):
-                if len(tag.split(' ')[-1]) != 1:  # no gender tag
-                    tag_name = tag
-                    tag_type = "tag"
-                elif ord(tag.split(' ')[-1]) == MALE_PREFIX:
-                    tag_name = tag[:-1]
+            for tag in m:
+                tag_name = tag[0]
+                tag_count = int(tag[1].replace("(", "").replace(")", ""))
+
+                if (tag_name_last := tag_name.split(" ")[-1]) == chr(MALE_PREFIX):
                     tag_type = "male"
-                else:
-                    tag_name = tag[:-1]
+                    tag_name = tag_name.replace(chr(MALE_PREFIX)).strip()
+                elif tag_name_last == chr(FEMALE_PREFIX):
                     tag_type = "female"
-                tag_count = int(re.compile(r"\((\d+)\)").match(m[index][1]).group(1))
+                    tag_name = tag_name.replace(chr(FEMALE_PREFIX)).strip()
+                else:
+                    tag_type = "tag"
+                    tag_name = tag_name.strip()
                 Tag.objects.update_or_insert(name=tag_name, tagtype=tag_type, gallery_count=tag_count)
 
         self.stdout.write(f"Thread {threading.get_ident()}: Done tag thread with job {i}")
