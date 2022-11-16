@@ -15,7 +15,6 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'constance',
     'constance.backends.database',
-    'django_crontab',
 ]
 
 PROJECT_APPS = [
@@ -26,10 +25,6 @@ PROJECT_APPS = [
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
-
-CRONJOBS = [
-    ('0 0 * * 0', 'python', 'manage.py', 'countgallery', '--worker', '2', '>> ' + os.path.join(BASE_DIR, 'cron.log')),
-]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
