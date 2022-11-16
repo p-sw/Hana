@@ -219,3 +219,13 @@ def toggle_favorite(request):
     else:
         Favorites.objects.create(user_id=user_id, gallery_id=gallery_id)
         return JsonResponse({"exists": True})
+
+
+def get_favorite_list(request):
+    user_id = request.user.id
+
+    if not user_id:
+        return HttpResponse(status=403)
+
+    result = Favorites.objects.filter(user_id=user_id).values_list('gallery_id', flat=True)
+    return JsonResponse({"galleries": list(result)})

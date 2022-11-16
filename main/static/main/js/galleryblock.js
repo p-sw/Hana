@@ -160,8 +160,44 @@ class SearchObject {
     }
 }
 
+class FavoriteObject {
+    constructor(caller) {
+        this.caller = caller;
+    }
+
+    entrypoint() {
+        this.caller.load().then((data) => {
+            let result_length_element = document.querySelector("#result-length");
+            result_length_element.innerText = this.total_galleries;
+            result_length_element.parentElement.parentElement.removeAttribute("style");
+            this.caller.put(data);
+        })
+    }
+
+    load() {
+        return fetch("/api/favorite/get-list", {
+            method: "GET",
+        }).then((response) => {
+            if (response.status === 403) {
+                window.location.href = '/';
+            } else if (response.status !== 200) {
+                window.location.reload();
+            } else {
+                return response.json();
+            }
+        }).then((data) => {
+            this.total_galleries = data["galleries"].length;
+            return data["galleries"].slice(
+                (this.caller.page - 1) * this.caller.galleries_per_page,
+                Math.min(this.total_galleries, this.caller.page * this.caller.galleries_per_page)
+            );
+        })
+    }
+}
+
 class GalleryBlock {
-    constructor() {
+    constructor(page_mode) {
+        this.page_mode = page_mode;
         this.galleries_per_page = 25;
         this.query = decodeURIComponent(window.location.search);
         if (/^\?page=\d+$/.test(this.query)) {
@@ -170,29 +206,34 @@ class GalleryBlock {
             this.page = 1;
         }
 
-        this.query_tags = /[?&]tags=([+\-a-z_:]+)/.exec(this.query);
-        if (this.query_tags) {
-            this.query_tags = this.query_tags[1]
-            this.positives = Array.prototype.map.call(
-                [...this.query_tags.matchAll(/\+([a-z:_]+)/g)],
-                (m) => m[1].replace("_", " "));
-            this.negatives = Array.prototype.map.call(
-                [...this.query_tags.matchAll(/-([a-z:_]+)/g)],
-                (m) => m[1].replace("_", " "));
-            this.search_page = true;
-            this.processor = new SearchObject(this);
-        } else {
-            this.search_page = false;
+        if (this.page_mode === "search") {
+            this.query_tags = /[?&]tags=([+\-a-z_:]+)/.exec(this.query);
+            if (this.query_tags) {
+                this.query_tags = this.query_tags[1]
+                this.positives = Array.prototype.map.call(
+                    [...this.query_tags.matchAll(/\+([a-z:_]+)/g)],
+                    (m) => m[1].replace("_", " "));
+                this.negatives = Array.prototype.map.call(
+                    [...this.query_tags.matchAll(/-([a-z:_]+)/g)],
+                    (m) => m[1].replace("_", " "));
+                this.processor = new SearchObject(this);
+            } else {
+                window.location.href = '/';
+            }
+        } else if (this.page_mode === "favorites") {
+            this.processor = new FavoriteObject(this);
         }
     }
 
     entrypoint() {
-        if (this.search_page) {
+        if (this.page_mode === "search") {
             this.processor.entrypoint();
-        } else {
+        } else if (this.page_mode === "index") {
             this.load('').then((gallery_ids) => {
                 this.put(gallery_ids);
             });
+        } else if (this.page_mode === "favorites") {
+            this.processor.entrypoint();
         }
     }
 
@@ -278,6 +319,3 @@ class GalleryBlock {
         return "?"+result.join('&');
     }
 }
-
-gallery = new GalleryBlock();
-gallery.entrypoint();
