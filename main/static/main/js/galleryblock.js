@@ -238,9 +238,25 @@ class GalleryBlock {
         return fetch(`/api/get-nozomi${query}`, {
             method: 'GET',
         }).then(response => {
-            return response.arrayBuffer();
+            if (response.status === 200 || response.status === 206) {
+                return response.arrayBuffer();
+            } else {
+                // reject
+                return Promise.reject(response.status);
+            }
         }).then((buffer) => {
             return new DataView(buffer);
+        }, (code) => {
+            if (code === 404) {
+                document.querySelector("#loading-content").remove();
+                document.querySelector("#gallery").innerHTML = "<p>404 에러<br>관리자에게 문의하세요.</p>";
+            } else if (code === 500) {
+                document.querySelector("#loading-content").remove();
+                document.querySelector("#gallery").innerHTML = "<p>500 에러<br>잠시 후 다시 시도해보세요.</p>";
+            } else {
+                document.querySelector("#loading-content").remove();
+                document.querySelector("#gallery").innerHTML = `<p>${code} 에러<br>관리자에게 문의하세요.</p>`;
+            }
         }).then((data) => {
             this.total_galleries = data.byteLength / 4;
             // init page navigator
