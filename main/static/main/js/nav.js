@@ -1,3 +1,19 @@
+buttonFunctions = {
+    "favorite": function(e) {
+        window.location.href = "/app/favorites";
+    },
+
+    "settings": function(e) {
+        window.location.href = "/app/settings";
+    },
+
+    "searchURL": () => {return "/app/search";},
+
+    "home": function(e) {
+        window.location.href = "/";
+    }
+}
+
 class Nav {
     constructor() {
         this.toolbar = document.querySelector('.toolbar');
@@ -5,11 +21,17 @@ class Nav {
         this.nav = this.toolbar.querySelector('nav');
         this.navOpener = this.nav.querySelector('div.control button.nav-opener');
         this.navCloser = this.nav.querySelector('div.control button.nav-closer');
+        this.homeButton = this.nav.querySelector('div.control button.home');
 
-        this.contents = this.nav.querySelectorAll('div.content button');
+        this.content = this.nav.querySelector('div.content');
+        this.contents = this.nav.querySelectorAll('button');
 
         this.navOpener.addEventListener('click', this.open.bind(this));
         this.navCloser.addEventListener('click', this.close.bind(this));
+        this.homeButton.addEventListener('click', buttonFunctions.home);
+
+        this.content.querySelector('button.favorite').addEventListener('click', buttonFunctions.favorite);
+        this.content.querySelector('button.settings').addEventListener('click', buttonFunctions.settings);
 
         this.queryArea = new QueryArea();
     }
@@ -118,7 +140,7 @@ class QueryArea {
             for (let i = 0; i < appendedTags.length; i++) {
                 query += appendedTags[i].querySelector("input:checked").value+appendedTags[i].dataset.tag;
             }
-            window.location.href = `/app?tags=${query}`;
+            window.location.href = `${buttonFunctions.searchURL()}?tags=${query}`;
         }
     }
 }

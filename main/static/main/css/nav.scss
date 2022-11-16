@@ -1,5 +1,10 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css");
 
+$toolbar-element-length: 2;
+
+$nav-gap: 20px;
+$nav-button-hover-move-px: 6px;
+
 section.toolbar {
   display: flex;
   flex-direction: row;
@@ -19,9 +24,9 @@ section.toolbar {
   nav {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: $nav-gap;
 
     padding: 10px 5px;
 
@@ -60,7 +65,7 @@ section.toolbar {
 
       &::after {
         position: absolute;
-        left: 45px;
+        top: 45px;
 
         content: attr(data-label);
         font-size: 12px;
@@ -101,8 +106,24 @@ section.toolbar {
     }
 
     div.control {
-      button.disabled {
-        display: none;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: $nav-gap;
+
+      button {
+        transition: all 0.1s;
+
+        &:not([data-fixed]):hover {
+          transform: translateX(-$nav-button-hover-move-px);
+
+          transition: all 0.1s;
+        }
+
+        &.disabled {
+          display: none;
+        }
       }
     }
 
@@ -112,12 +133,22 @@ section.toolbar {
       justify-content: flex-start;
       align-items: center;
 
+      gap: $nav-gap;
+
       button {
         width: 40px;
         height: 40px;
+
+        transition: all 0.2s;
+
+        &:hover {
+          transform: scale(1) translateY(-$nav-button-hover-move-px) !important;
+
+          transition: all 0.1s !important;
+        }
       }
 
-      @for $i from 1 through 1 {
+      @for $i from 1 through $toolbar-element-length {
         button:not(.visible) {
           transform: scale(0);
 

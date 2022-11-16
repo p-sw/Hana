@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 import requests
 import json
 
-from main.models import Tag
+from main.models import Tag, Favorites
 
 
 # Create your views here.
@@ -190,3 +190,42 @@ def get_recommendation_tag(request):
     return JsonResponse(
         {tag_id: f"{tag_type}:{tag_name}" for tag_id, tag_type, tag_name in result}
     )
+
+
+def get_favorite_by_gallery(request):
+    gallery_id = request.GET.get('id')
+    user_id = request.user.id
+
+    if not user_id:
+        return HttpResponse(status=403)
+
+    return JsonResponse({"exists": Favorites.objects.filter(user_id=user_id, gallery_id=gallery_id).exists()})
+
+
+@csrf_exempt
+def toggle_favorite(request):
+    POST: dict = json.loads(request.body)
+    gallery_id = POST.get("galleryid")
+    user_id = request.user.id
+
+    if not user_id:
+        return HttpResponse(status=403)
+
+    obj = Favorites.objects.filter(user_id=user_id, gallery_id=gallery_id)
+
+    if obj.exists():
+        obj.delete()
+        return JsonResponse({"exists": False})
+    else:
+        Favorites.objects.create(user_id=user_id, gallery_id=gallery_id)
+        return JsonResponse({"exists": True})
+
+
+def get_favorite_list(request):
+    user_id = request.user.id
+
+    if not user_id:
+        return HttpResponse(status=403)
+
+    result = Favorites.objects.filter(user_id=user_id).values_list('gallery_id', flat=True)
+    return JsonResponse({"galleries": list(result)})
