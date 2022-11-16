@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 import requests
 import json
 
-from main.models import Tag
+from main.models import Tag, Favorites
 
 
 # Create your views here.
@@ -190,3 +190,13 @@ def get_recommendation_tag(request):
     return JsonResponse(
         {tag_id: f"{tag_type}:{tag_name}" for tag_id, tag_type, tag_name in result}
     )
+
+
+def get_favorite_by_gallery(request):
+    gallery_id = request.GET.get('id')
+    user_id = request.user.id
+
+    if not user_id:
+        return HttpResponse(status=403)
+
+    return JsonResponse({"exists": Favorites.objects.filter(user_id=user_id, gallery_id=gallery_id).exists()})
