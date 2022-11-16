@@ -11,6 +11,12 @@ section.toolbar {
   position: fixed;
   top: 0;
 }
+@media (max-width: 400px) {
+  section.toolbar {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+}
 section.toolbar nav {
   display: flex;
   flex-direction: column;
@@ -18,6 +24,11 @@ section.toolbar nav {
   align-items: flex-start;
   gap: 20px;
   padding: 10px 5px;
+}
+@media (max-width: 400px) {
+  section.toolbar nav {
+    gap: 10px;
+  }
 }
 section.toolbar nav button {
   display: flex;
@@ -36,8 +47,14 @@ section.toolbar nav button {
 }
 @media (max-width: 600px) {
   section.toolbar nav button {
+    width: 50px;
+    height: 60px;
+  }
+}
+@media (max-width: 400px) {
+  section.toolbar nav button {
     width: 40px;
-    height: 50px;
+    height: 40px;
   }
 }
 section.toolbar nav button:hover {
@@ -66,6 +83,11 @@ section.toolbar nav button::after {
     opacity: 1;
   }
 }
+@media (max-width: 400px) {
+  section.toolbar nav button::after {
+    display: none;
+  }
+}
 @media (min-width: 600px) {
   section.toolbar nav button::after {
     opacity: 0;
@@ -89,6 +111,11 @@ section.toolbar nav div.control {
   align-items: center;
   gap: 20px;
 }
+@media (max-width: 400px) {
+  section.toolbar nav div.control {
+    gap: 10px;
+  }
+}
 section.toolbar nav div.control button {
   transition: all 0.1s;
 }
@@ -106,10 +133,27 @@ section.toolbar nav div.content {
   align-items: center;
   gap: 20px;
 }
+@media (max-width: 400px) {
+  section.toolbar nav div.content {
+    gap: 10px;
+  }
+}
 section.toolbar nav div.content button {
   width: 40px;
   height: 40px;
   transition: all 0.2s;
+}
+@media (max-width: 600px) {
+  section.toolbar nav div.content button {
+    width: 50px;
+    height: 60px;
+  }
+}
+@media (max-width: 400px) {
+  section.toolbar nav div.content button {
+    width: 40px;
+    height: 40px;
+  }
 }
 section.toolbar nav div.content button:hover {
   transform: scale(1) translateY(-6px) !important;
@@ -137,6 +181,11 @@ section.toolbar div.searchbar {
   justify-content: center;
   align-items: flex-start;
   padding: 10px;
+}
+@media (max-width: 400px) {
+  section.toolbar div.searchbar {
+    width: 100%;
+  }
 }
 section.toolbar div.searchbar div.searchbar-container {
   display: flex;
@@ -246,11 +295,21 @@ section.toolbar div.searchbar div.searchbar-container div.searchbar-input input.
   border-radius: 5px;
   background-color: #fff;
 }
+@media (max-width: 400px) {
+  section.toolbar div.searchbar div.searchbar-container div.searchbar-input input.main-input {
+    min-width: 80%;
+  }
+}
 section.toolbar div.searchbar div.searchbar-container div.searchbar-input input.main-input::placeholder {
   font-family: "Pretendard", sans-serif;
   font-size: 16px;
   font-weight: 600;
   color: rgba(0, 0, 0, 0.3137254902);
+}
+@media (max-width: 400px) {
+  section.toolbar div.searchbar div.searchbar-container div.searchbar-input input.main-input::placeholder {
+    font-size: 12px;
+  }
 }
 section.toolbar div.searchbar div.searchbar-container div.searchbar-input input.main-input:focus {
   outline: none;
@@ -296,6 +355,11 @@ section.toolbar div.searchbar div.searchbar-container div.suggests div.item span
   font-size: 16px;
   font-weight: 600;
   color: #000;
+}
+@media (max-width: 400px) {
+  section.toolbar div.searchbar div.searchbar-container div.suggests div.item span {
+    font-size: 12px;
+  }
 }
 section.toolbar div.searchbar button.search {
   display: flex;

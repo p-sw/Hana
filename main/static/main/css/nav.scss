@@ -3,6 +3,7 @@
 $toolbar-element-length: 2;
 
 $nav-gap: 20px;
+$nav-gap-400: 10px;
 $nav-button-hover-move-px: 6px;
 
 section.toolbar {
@@ -10,6 +11,11 @@ section.toolbar {
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
+
+  @media (max-width: 400px) {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
 
   padding: 0 8px;
 
@@ -27,6 +33,10 @@ section.toolbar {
     justify-content: flex-start;
     align-items: flex-start;
     gap: $nav-gap;
+
+    @media (max-width: 400px) {
+      gap: $nav-gap-400;
+    }
 
     padding: 10px 5px;
 
@@ -49,8 +59,13 @@ section.toolbar {
       box-shadow: 0 0 5px #00000050;
 
       @media (max-width: 600px) {
+        width: 50px;
+        height: 60px;
+      }
+
+      @media (max-width: 400px) {
         width: 40px;
-        height: 50px;
+        height: 40px;
       }
 
       &:hover {
@@ -85,6 +100,10 @@ section.toolbar {
           opacity: 1;
         }
 
+        @media (max-width: 400px) {
+          display: none;
+        }
+
         @media (min-width: 600px) {
           opacity: 0;
 
@@ -111,6 +130,9 @@ section.toolbar {
       justify-content: center;
       align-items: center;
       gap: $nav-gap;
+      @media (max-width: 400px) {
+        gap: $nav-gap-400;
+      }
 
       button {
         transition: all 0.1s;
@@ -134,10 +156,23 @@ section.toolbar {
       align-items: center;
 
       gap: $nav-gap;
+      @media (max-width: 400px) {
+        gap: $nav-gap-400;
+      }
 
       button {
         width: 40px;
         height: 40px;
+
+        @media (max-width: 600px) {
+          width: 50px;
+          height: 60px;
+        }
+
+        @media (max-width: 400px) {
+          width: 40px;
+          height: 40px;
+        }
 
         transition: all 0.2s;
 
@@ -171,6 +206,10 @@ section.toolbar {
     align-items: flex-start;
 
     padding: 10px;
+
+    @media (max-width: 400px) {
+      width: 100%;
+    }
 
     div.searchbar-container {
       display: flex;
@@ -307,9 +346,16 @@ section.toolbar {
           border-radius: 5px;
           background-color: #fff;
 
+          @media (max-width: 400px) {
+            min-width: 80%;
+          }
+
           &::placeholder {
             font-family: "Pretendard", sans-serif;
             font-size: 16px;
+            @media (max-width: 400px) {
+              font-size: 12px;
+            }
             font-weight: 600;
             color: #00000050;
           }
@@ -370,6 +416,9 @@ section.toolbar {
           span {
             font-family: "Pretendard", sans-serif;
             font-size: 16px;
+            @media (max-width: 400px) {
+              font-size: 12px;
+            }
             font-weight: 600;
             color: #000;
           }

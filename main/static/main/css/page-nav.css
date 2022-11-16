@@ -22,6 +22,11 @@ section#page-navigation nav.page-navigator {
   border-radius: 15px;
   transition: 0.1s;
 }
+@media (max-width: 420px) {
+  section#page-navigation nav.page-navigator {
+    gap: 10px;
+  }
+}
 section#page-navigation nav.page-navigator:hover {
   transform: scale(1.05);
   transition: 0.1s;
@@ -36,15 +41,28 @@ section#page-navigation nav.page-navigator a.page-button {
   font-size: 25px;
   font-weight: 700;
 }
+@media (max-width: 420px) {
+  section#page-navigation nav.page-navigator a.page-button {
+    font-size: 20px;
+  }
+}
 section#page-navigation nav.page-navigator a.page-button.current-page {
   color: #2c9f2c;
   text-decoration: underline;
 }
-section#page-navigation nav.page-navigator a.page-prev {
-  content: "←";
+section#page-navigation nav.page-navigator a.page-prev, section#page-navigation nav.page-navigator a.page-next {
+  height: 30px;
+  width: 40px;
 }
-section#page-navigation nav.page-navigator a.page-next {
+section#page-navigation nav.page-navigator a.page-prev::before {
+  content: "←";
+  height: 30px;
+  font-weight: 1000;
+}
+section#page-navigation nav.page-navigator a.page-next::after {
   content: "→";
+  height: 30px;
+  font-weight: 1000;
 }
 section#page-navigation nav.page-navigator a:not(.current-page):hover {
   color: #2c2c9f;

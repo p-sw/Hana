@@ -33,6 +33,7 @@ section#gallery article.gallery-block {
 section#gallery article.gallery-block div {
   display: flex;
   flex-direction: row;
+  align-items: center;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -45,6 +46,7 @@ section#gallery article.gallery-block div {
 section#gallery article.gallery-block div div.col {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   width: 70%;
   height: 100%;
   margin-left: 20px;
@@ -53,6 +55,7 @@ section#gallery article.gallery-block div div.col {
   section#gallery article.gallery-block div div.col {
     width: 100%;
     margin-left: 0;
+    align-items: center;
   }
 }
 section#gallery article.gallery-block div a.lillie {
@@ -63,11 +66,14 @@ section#gallery article.gallery-block div a.lillie {
 }
 @media (max-width: 600px) {
   section#gallery article.gallery-block div a.lillie {
-    width: 50%;
+    width: 100%;
+    max-height: 300px;
   }
 }
-section#gallery article.gallery-block div a.lillie div, section#gallery article.gallery-block div a.lillie picture {
+section#gallery article.gallery-block div a.lillie div, section#gallery article.gallery-block div a.lillie picture, section#gallery article.gallery-block div a.lillie img {
   margin-left: 0;
+  max-width: 100%;
+  max-height: 300px;
 }
 section#gallery article.gallery-block div h1.lillie {
   font-family: "Pretendard", sans-serif;
@@ -114,6 +120,12 @@ section#gallery article.gallery-block div div[class$=content] {
   font-size: 20px;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+}
+@media (max-width: 600px) {
+  section#gallery article.gallery-block div div[class$=content] {
+    align-items: center;
+  }
 }
 section#gallery article.gallery-block div div[class$=content] a:not([href]) {
   cursor: default;
