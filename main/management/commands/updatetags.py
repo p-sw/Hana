@@ -136,10 +136,10 @@ class Command(BaseCommand):
 
                 if (tag_name_last := tag_name.split(" ")[-1]) == chr(MALE_PREFIX):
                     tag_type = "male"
-                    tag_name = tag_name.replace(chr(MALE_PREFIX)).strip()
+                    tag_name = tag_name.replace(chr(MALE_PREFIX), "").strip()
                 elif tag_name_last == chr(FEMALE_PREFIX):
                     tag_type = "female"
-                    tag_name = tag_name.replace(chr(FEMALE_PREFIX)).strip()
+                    tag_name = tag_name.replace(chr(FEMALE_PREFIX), "").strip()
                 else:
                     tag_type = "tag"
                     tag_name = tag_name.strip()
