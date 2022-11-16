@@ -27,3 +27,12 @@ class Tag(models.Model):
 
     def __str__(self):
         return f"{self.tagtype}:{self.name}"
+
+
+class Favorites(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    gallery_id = models.BigIntegerField()
+    user_id = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.user_id}::{self.gallery_id}"
