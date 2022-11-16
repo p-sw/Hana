@@ -14,9 +14,9 @@ section.toolbar {
 section.toolbar nav {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 20px;
   padding: 10px 5px;
 }
 section.toolbar nav button {
@@ -49,7 +49,7 @@ section.toolbar nav button:hover::after {
 }
 section.toolbar nav button::after {
   position: absolute;
-  left: 45px;
+  top: 45px;
   content: attr(data-label);
   font-size: 12px;
   font-weight: 600;
@@ -82,6 +82,20 @@ section.toolbar nav button img {
   width: 30px;
   height: 30px;
 }
+section.toolbar nav div.control {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+section.toolbar nav div.control button {
+  transition: all 0.1s;
+}
+section.toolbar nav div.control button:not([data-fixed]):hover {
+  transform: translateX(-6px);
+  transition: all 0.1s;
+}
 section.toolbar nav div.control button.disabled {
   display: none;
 }
@@ -90,11 +104,16 @@ section.toolbar nav div.content {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
 }
 section.toolbar nav div.content button {
   width: 40px;
   height: 40px;
+  transition: all 0.2s;
+}
+section.toolbar nav div.content button:hover {
+  transform: scale(1) translateY(-6px) !important;
+  transition: all 0.1s !important;
 }
 section.toolbar nav div.content button:not(.visible) {
   transform: scale(0);

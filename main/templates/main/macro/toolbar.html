@@ -3,11 +3,14 @@
 <section class="toolbar">
     <nav class="navigation">
         <div class="control">
-            <button class="nav-opener" data-label="메뉴">
+            <button class="nav-opener" data-label="메뉴" data-fixed>
                 <img src="{% static 'main/image/menu.svg' %}" alt="menu">
             </button>
-            <button class="nav-closer disabled" data-label="닫기">
+            <button class="nav-closer disabled" data-label="닫기" data-fixed>
                 <img src="{% static 'main/image/close.svg' %}" alt="close">
+            </button>
+            <button class="home" data-label="홈">
+                <img src="{% static 'viewer/image/home.svg' %}" alt="home">
             </button>
         </div>
         <div class="content">
