@@ -188,5 +188,5 @@ def get_recommendation_tag(request):
     ])[:search_result_limit]
 
     return JsonResponse(
-        {tag_id: f"{tag_type}:{tag_name} ({gallery_count})" for tag_id, tag_type, tag_name in result}
+        {tag_id: f"{tag_type}:{tag_name}" for tag_id, tag_type, tag_name in result}
     )
