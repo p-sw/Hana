@@ -206,7 +206,7 @@ class GalleryBlock {
         this.page_mode = page_mode;
         this.galleries_per_page = 25;
         this.query = decodeURIComponent(window.location.search);
-        if (/^\?page=\d+$/.test(this.query)) {
+        if (/[?&]page=\d+$/.test(this.query)) {
             this.page = parseInt(this.query.replace(/^\?page=/, ''), 10);
         } else {
             this.page = 1;
