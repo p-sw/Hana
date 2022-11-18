@@ -83,10 +83,11 @@ class SearchObject {
                     resolve(data);
                 })
             } else {
-                this.caller.load(
+                let first = this.caller.positives.shift()
+                this.caller.loadFull(
                     this.caller.objToQuery(
                         this.tag_processor(
-                            this.caller.positives.shift()
+                            first
                         )
                     )
                 ).then((data) => {
@@ -96,10 +97,9 @@ class SearchObject {
         }).then((data) => {
             // positive
             if (this.caller.positives.length) {
-                console.log(data);
                 return Promise.all(this.caller.positives.map(tag => {
                     return new Promise((resolve, reject) => {
-                        this.caller.load(
+                        this.caller.loadFull(
                             this.caller.objToQuery(
                                 this.tag_processor(tag)
                             )
@@ -118,7 +118,7 @@ class SearchObject {
                 return Promise.all(this.caller.negatives.map(tag => {
                     return new Promise((resolve, reject) => {
                         return new Promise((resolve, reject) => {
-                            this.caller.load(
+                            this.caller.loadFull(
                                 this.caller.objToQuery(
                                     this.tag_processor(tag)
                                 )
@@ -133,10 +133,14 @@ class SearchObject {
                 return data;
             }
         }).then((data) => {
+            data = data[0];
             let result_length_element = document.querySelector("#result-length");
-            result_length_element.innerText = this.caller.total_galleries;
+            result_length_element.innerText = data.length.toString();
             result_length_element.parentElement.parentElement.removeAttribute("style");
-            this.caller.put(data);
+
+            this.caller.buildPageNav(data.length, this.caller.galleries_per_page);
+
+            this.caller.put(data.slice((this.caller.page - 1) * this.caller.galleries_per_page, this.caller.page * this.caller.galleries_per_page));
         })
     }
 
@@ -170,6 +174,8 @@ class FavoriteObject {
             let result_length_element = document.querySelector("#result-length");
             result_length_element.innerText = this.total_galleries;
             result_length_element.parentElement.parentElement.removeAttribute("style");
+
+            this.caller.buildPageNav(this.total_galleries, this.caller.galleries_per_page);
             this.caller.put(data);
         })
     }
@@ -207,15 +213,17 @@ class GalleryBlock {
         }
 
         if (this.page_mode === "search") {
-            this.query_tags = /[?&]tags=([+\-a-z_:]+)/.exec(this.query);
+            this.query_tags = Array.prototype.map.call([...this.query.matchAll(/[+\-][a-z_:]+/g)], (match) => match[0]);
             if (this.query_tags) {
-                this.query_tags = this.query_tags[1]
-                this.positives = Array.prototype.map.call(
-                    [...this.query_tags.matchAll(/\+([a-z:_]+)/g)],
-                    (m) => m[1].replace("_", " "));
-                this.negatives = Array.prototype.map.call(
-                    [...this.query_tags.matchAll(/-([a-z:_]+)/g)],
-                    (m) => m[1].replace("_", " "));
+                this.positives = [];
+                this.negatives = [];
+                for (let tag of this.query_tags) {
+                    if (tag[0] === "+") {
+                        this.positives.push(tag.slice(1).replace(/_/g, " "));
+                    } else if (tag[0] === "-") {
+                        this.negatives.push(tag.slice(1).replace(/_/g, " "));
+                    }
+                }
             } else {
                 window.location.href = '/';
             }
@@ -227,6 +235,7 @@ class GalleryBlock {
             new SearchObject(this).entrypoint();
         } else if (this.page_mode === "index") {
             this.load('').then((gallery_ids) => {
+                this.buildPageNav(this.total_galleries, this.galleries_per_page);
                 this.put(gallery_ids);
             });
         } else if (this.page_mode === "favorites") {
@@ -259,9 +268,6 @@ class GalleryBlock {
             }
         }).then((data) => {
             this.total_galleries = data.byteLength / 4;
-            // init page navigator
-            let page_navigator = new PageNavigator(Math.ceil(this.total_galleries / this.galleries_per_page));
-            page_navigator.build();
 
             let result = [];
             for (let i=(this.page - 1) * this.galleries_per_page;i<Math.min(this.total_galleries, this.galleries_per_page * this.page);i++) {
@@ -269,6 +275,45 @@ class GalleryBlock {
             }
             return result;
         })
+    }
+
+    loadFull(query) {
+        return fetch(`/api/get-nozomi${query}`, {
+            method: 'GET',
+        }).then(response => {
+            if (response.status === 200 || response.status === 206) {
+                return response.arrayBuffer();
+            } else {
+                // reject
+                return Promise.reject(response.status);
+            }
+        }).then((buffer) => {
+            return new DataView(buffer);
+        }, (code) => {
+            if (code === 404) {
+                document.querySelector("#loading-content").remove();
+                document.querySelector("#gallery").innerHTML = "<p>404 에러<br>관리자에게 문의하세요.</p>";
+            } else if (code === 500) {
+                document.querySelector("#loading-content").remove();
+                document.querySelector("#gallery").innerHTML = "<p>500 에러<br>잠시 후 다시 시도해보세요.</p>";
+            } else {
+                document.querySelector("#loading-content").remove();
+                document.querySelector("#gallery").innerHTML = `<p>${code} 에러<br>관리자에게 문의하세요.</p>`;
+            }
+        }).then((data) => {
+            this.total_galleries = data.byteLength / 4;
+
+            let result = [];
+            for (let i=0;i < this.total_galleries;i++) {
+                result.push(data.getUint32(i*4, false));
+            }
+            return result;
+        })
+    }
+
+    buildPageNav(total_galleries, galleries_per_page) {
+        let page_navigator = new PageNavigator(Math.ceil(total_galleries / galleries_per_page));
+        page_navigator.build();
     }
 
     put(items) {
