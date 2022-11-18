@@ -4,7 +4,7 @@ $toolbar-element-length: 2;
 
 $nav-gap: 20px;
 $nav-gap-400: 10px;
-$nav-button-hover-move-px: 6px;
+$nav-button-hover-scale: 1.1;
 
 section.toolbar {
   display: flex;
@@ -138,7 +138,7 @@ section.toolbar {
         transition: all 0.1s;
 
         &:not([data-fixed]):hover {
-          transform: translateX(-$nav-button-hover-move-px);
+          transform: scale($nav-button-hover-scale);
 
           transition: all 0.1s;
         }
@@ -174,12 +174,12 @@ section.toolbar {
           height: 40px;
         }
 
-        transition: all 0.2s;
+        transition: transform 0.1s;
 
         &:hover {
-          transform: scale(1) translateY(-$nav-button-hover-move-px) !important;
+          transform: scale($nav-button-hover-scale) !important;
 
-          transition: all 0.1s !important;
+          transition: transform 0.1s !important;
         }
       }
 
@@ -187,13 +187,15 @@ section.toolbar {
         button:not(.visible) {
           transform: scale(0);
 
-          transition: 0.2s ease-in-out 0.05s*$i;
+          transition: transform 0.1s;
+          transition-delay: 0.08s * $i;
         }
 
         button.visible:nth-child(#{$i}) {
           transform: scale(1);
 
-          transition: 0.2s ease-in-out 0.1s*$i;
+          transition: transform 0.1s;
+          transition-delay: 0.08s * $i;
         }
       }
     }

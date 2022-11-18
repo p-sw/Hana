@@ -120,7 +120,7 @@ section.toolbar nav div.control button {
   transition: all 0.1s;
 }
 section.toolbar nav div.control button:not([data-fixed]):hover {
-  transform: translateX(-6px);
+  transform: scale(1.1);
   transition: all 0.1s;
 }
 section.toolbar nav div.control button.disabled {
@@ -141,7 +141,7 @@ section.toolbar nav div.content {
 section.toolbar nav div.content button {
   width: 40px;
   height: 40px;
-  transition: all 0.2s;
+  transition: transform 0.1s;
 }
 @media (max-width: 600px) {
   section.toolbar nav div.content button {
@@ -156,24 +156,28 @@ section.toolbar nav div.content button {
   }
 }
 section.toolbar nav div.content button:hover {
-  transform: scale(1) translateY(-6px) !important;
-  transition: all 0.1s !important;
+  transform: scale(1.1) !important;
+  transition: transform 0.1s !important;
 }
 section.toolbar nav div.content button:not(.visible) {
   transform: scale(0);
-  transition: 0.2s ease-in-out 0.05s;
+  transition: transform 0.1s;
+  transition-delay: 0.08s;
 }
 section.toolbar nav div.content button.visible:nth-child(1) {
   transform: scale(1);
-  transition: 0.2s ease-in-out 0.1s;
+  transition: transform 0.1s;
+  transition-delay: 0.08s;
 }
 section.toolbar nav div.content button:not(.visible) {
   transform: scale(0);
-  transition: 0.2s ease-in-out 0.1s;
+  transition: transform 0.1s;
+  transition-delay: 0.16s;
 }
 section.toolbar nav div.content button.visible:nth-child(2) {
   transform: scale(1);
-  transition: 0.2s ease-in-out 0.2s;
+  transition: transform 0.1s;
+  transition-delay: 0.16s;
 }
 section.toolbar div.searchbar {
   display: flex;
