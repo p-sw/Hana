@@ -133,7 +133,10 @@ class SearchObject {
                 return data;
             }
         }).then((data) => {
-            data = data[0];
+            console.log(data);
+            if (data.length === 1) {
+                data = data[0];
+            }
             let result_length_element = document.querySelector("#result-length");
             result_length_element.innerText = data.length.toString();
             result_length_element.parentElement.parentElement.removeAttribute("style");
