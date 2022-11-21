@@ -113,28 +113,28 @@ class SearchObject {
                 return data;
             }
         }).then((data) => {
+            if (typeof(data[0]) === "object") {
+                data = data[0]
+            }
             // negative
             if (this.caller.negatives.length) {
                 return Promise.all(this.caller.negatives.map(tag => {
-                    return new Promise((resolve, reject) => {
-                        return new Promise((resolve, reject) => {
-                            this.caller.loadFull(
-                                this.caller.objToQuery(
-                                    this.tag_processor(tag)
-                                )
-                            ).then(new_results => {
-                                const new_results_set = new Set(new_results);
-                                resolve(data.filter(gallery => !new_results_set.has(gallery)));
-                            });
-                        });
-                    });
+                   return new Promise((resolve, reject) => {
+                       this.caller.loadFull(
+                           this.caller.objToQuery(
+                               this.tag_processor(tag)
+                           )
+                       ).then(new_results => {
+                           const new_results_set = new Set(new_results);
+                           resolve(data.filter(gallery => !new_results_set.has(gallery)));
+                       });
+                   });
                 }));
             } else {
                 return data;
             }
         }).then((data) => {
-            console.log(data);
-            if (data.length === 1) {
+            if (typeof(data[0]) === "object") {
                 data = data[0];
             }
             let result_length_element = document.querySelector("#result-length");
