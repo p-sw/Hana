@@ -159,27 +159,6 @@ def get_recommendation_tag(request):
             "type_query": query_type if query_type else "female",
             "type_filter": "startswith",
             "name_query": current_name,
-            "name_filter": "startswith",
-            "excludes": ban_ids
-        },
-        {
-            "type_query": query_type if query_type else "male",
-            "type_filter": "startswith",
-            "name_query": current_name,
-            "name_filter": "startswith",
-            "excludes": ban_ids
-        },
-        {
-            "type_query": query_type,
-            "type_filter": "startswith",
-            "name_query": current_name,
-            "name_filter": "startswith",
-            "excludes": ban_ids
-        },
-        {
-            "type_query": query_type if query_type else "female",
-            "type_filter": "startswith",
-            "name_query": current_name,
             "name_filter": "in",
             "excludes": ban_ids
         },
